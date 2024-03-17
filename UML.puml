@@ -1,0 +1,28 @@
+@startuml
+
+class Terminal {
+- nom
+- loc
+- portes
+}
+
+class Porte {}
+
+
+class Avion {
+- id
+}
+
+
+class Model {
+- nombre passager
+- vitesse max
+- nom
+- made by
+}
+
+Terminal -> Porte : Contient plusieurs
+Porte -> Avion : Dessert plusieurs modèles d'avions
+Avion -> Model : est de type
+
+@enduml
