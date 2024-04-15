@@ -1,28 +1,121 @@
 @startuml
 
 class Terminal {
-- nom
-- loc
-- portes
+- nom : str {key}
 }
 
-class Porte {}
+class Localisation{
+- longitude : str
+- lattitude : str
+}
+note top of Localisation : {(longitude, lattitude) key}
+
+class Porte {
+- num : int {local key}
+}
 
 
 class Avion {
-- id
+- id : str {key}
+}
+
+class CompagnieFabrique{
+- nom : str {key}
 }
 
 
-class Model {
-- nombre passager
-- vitesse max
-- nom
-- made by
+abstract class Model {
+- nom : str {key}
+- nombrePassager : int
+- vitesseMax : float
 }
 
-Terminal -> Porte : Contient plusieurs
-Porte -> Avion : Dessert plusieurs modèles d'avions
-Avion -> Model : est de type
+class Turbopropulseur{
+- vitMaxRot : float
+}
+
+class Turboreacteur{
+- pousseeMax : float 
+}
+
+
+abstract class Vol{
+- id : str {key}
+}
+
+class VolDepart{
+- destination : str
+- heureDepart : datetime
+- heureEmbarquement : datetime
+}
+
+class VolArrivee{
+- provenance : str
+- heureArrivee : str
+}
+
+class CompagnieVol {
+- nom : str {key}
+}
+
+
+
+abstract class Personne{
+- nom : str
+- prenom : str
+- dateNaiss : date
+- rue : str
+- codepostal : int 
+- ville : str
+- pays : str
+}
+
+abstract class Personnel{
+- id_personnel : int {key}
+- numeroTel : str {20}
+}
+
+class Pilote{}
+class Stewart{}
+class HoteAccueil{}
+class Technique{}
+
+
+class Passager{
+- numeroTel : str {10} {NULLABLE}
+- poidsBagage : float
+- nombreBagage : int
+}
+
+
+
+Avion"*"--"1"Model : est du modèle >
+Personne<|--Personnel
+Personne<|--Passager
+Porte"1..*"--"*" Model : dessert >
+Model<|--Turbopropulseur
+Model<|--Turboreacteur
+Vol<|--VolArrivee
+Vol<|--VolDepart
+CompagnieVol"1"--"0..*"Vol : gère >
+Personnel<|--Pilote
+Personnel<|--Stewart
+Personnel<|--HoteAccueil
+Personnel<|--Technique
+Terminal*--"1..*"Porte : se situe < 
+Terminal"1"--"1"Localisation : se situe >
+Avion"1"--"1..*"Vol : réalise >
+Model"*"--"1"CompagnieFabrique : fabrique <
+Vol"1"--"2"Pilote : pilote <
+Vol"1"--"2..*"Stewart : travaille <
+VolDepart"1"--"2"HoteAccueil : accueille <
+Terminal"1"--"1..*"Technique : entretient <
+Vol"1..*"--"*"Passager : voyage <
+(Vol,Passager).. Bagage
+class Bagage{
+- nombreBagage : int
+- poidsBagage : float
+}
+Vol"1"--"1"Porte : relie >
 
 @enduml
