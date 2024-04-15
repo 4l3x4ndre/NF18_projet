@@ -2,16 +2,13 @@
 
 class Terminal {
 - nom : str {key}
+- longitude : float
+- lattitude : float
 }
-
-class Localisation{
-- longitude : str
-- lattitude : str
-}
-note top of Localisation : {(longitude, lattitude) key}
+note top of Terminal : {(longitude,latitude)key;-90<latitude<90;-180<longitude<180}
 
 class Porte {
-- num : int {local key}
+- num : int {local key,num>0}
 }
 
 
@@ -26,33 +23,37 @@ class CompagnieFabrique{
 
 abstract class Model {
 - nom : str {key}
-- nombrePassager : int
-- vitesseMax : float
+- nombrePlaces : int {nombrePlaces>=0}
+- vitesseMax : float {vitesseMax>0}
 }
 
 class Turbopropulseur{
-- vitMaxRot : float
+- vitMaxRot : float {vitMaxRot>0}
 }
 
 class Turboreacteur{
-- pousseeMax : float 
+- pousseeMax : float {pousseeMax>0}
 }
-
 
 abstract class Vol{
-- id : str {key}
+- id : str {key,id>0} 
 }
+note top of Vol : le vol et la porte associée doivent avoir le même modèle d'avion
+note top of Vol : nombre de passagers est infèrieur ou égal au nombre de places du modèle de l'avion associé au vol
+
 
 class VolDepart{
 - destination : str
 - heureDepart : datetime
 - heureEmbarquement : datetime
 }
+note top of VolDepart : heureEmbarquement<heureDepart
 
 class VolArrivee{
 - provenance : str
-- heureArrivee : str
+- heureArrivee : datetime
 }
+
 
 class CompagnieVol {
 - nom : str {key}
@@ -63,18 +64,17 @@ class CompagnieVol {
 abstract class Personne{
 - nom : str
 - prenom : str
-- dateNaiss : date
+- dateNaiss : date {datetime<currentDateTime}
 - rue : str
-- codepostal : int 
 - ville : str
 - pays : str
 }
 
 abstract class Personnel{
 - id_personnel : int {key}
-- numeroTel : str {20}
+- numeroTel : int {key}
 }
-
+note top of Personnel : {10<=length("numeroTel")<=12}
 class Pilote{}
 class Stewart{}
 class HoteAccueil{}
@@ -82,40 +82,41 @@ class Technique{}
 
 
 class Passager{
-- numeroTel : str {10} {NULLABLE}
-- poidsBagage : float
-- nombreBagage : int
+- numeroTel : int {NULLABLE}
+
 }
+note top of Passager : {10<=length("numeroTel")<=12, NULLABLE}
 
 
 
 Avion"*"--"1"Model : est du modèle >
 Personne<|--Personnel
 Personne<|--Passager
-Porte"1..*"--"*" Model : dessert >
+Porte"1..*"--"1..*" Model : peut accueillir >
 Model<|--Turbopropulseur
 Model<|--Turboreacteur
 Vol<|--VolArrivee
-Vol<|--VolDepart
+Vol<|----VolDepart
 CompagnieVol"1"--"0..*"Vol : gère >
 Personnel<|--Pilote
-Personnel<|--Stewart
+Personnel<|---Stewart
 Personnel<|--HoteAccueil
-Personnel<|--Technique
+Personnel<|---Technique
 Terminal*--"1..*"Porte : se situe < 
-Terminal"1"--"1"Localisation : se situe >
 Avion"1"--"1..*"Vol : réalise >
 Model"*"--"1"CompagnieFabrique : fabrique <
-Vol"1"--"2"Pilote : pilote <
-Vol"1"--"2..*"Stewart : travaille <
-VolDepart"1"--"2"HoteAccueil : accueille <
+Vol"*"--"2"Pilote : pilote <
+Vol"*"--"2..*"Stewart : travaille <
+VolDepart"*"--"2"HoteAccueil : accueille <
 Terminal"1"--"1..*"Technique : entretient <
 Vol"1..*"--"*"Passager : voyage <
 (Vol,Passager).. Bagage
 class Bagage{
-- nombreBagage : int
-- poidsBagage : float
+- nombreBagage : int {nombreBagage>=0}
+- poidsBagage : float {poidsBagage>=0}
 }
-Vol"1"--"1"Porte : relie >
+
+Vol"*"--"1"Porte : relie >
+
 
 @enduml
