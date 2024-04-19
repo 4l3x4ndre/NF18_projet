@@ -36,7 +36,7 @@ class Turboreacteur{
 }
 
 abstract class Vol{
-- id : str {key,id>0} 
+- id : str {key} 
 }
 note top of Vol : le vol et la porte associée doivent avoir le même modèle d'avion
 note top of Vol : nombre de passagers est infèrieur ou égal au nombre de places du modèle de l'avion associé au vol
