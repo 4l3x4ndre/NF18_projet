@@ -16,8 +16,15 @@ class Avion {
 - id : str {key}
 }
 
-class CompagnieFabrique{
+class Compagnie {
 - nom : str {key}
+}
+
+CompagnieFabrique--|>Compagnie
+CompagnieVol--|>Compagnie
+
+class CompagnieFabrique{
+
 }
 
 
@@ -55,10 +62,6 @@ class VolArrivee{
 }
 
 
-class CompagnieVol {
-- nom : str {key}
-}
-
 
 
 abstract class Personne{
@@ -91,7 +94,10 @@ note top of Passager : {10<=length("numeroTel")<=12, NULLABLE}
 
 Avion"*"--"1"Model : est du modèle >
 Personne<|--Personnel
+note bottom of Personne :  "Héritage : OR"
 Personne<|--Passager
+
+
 Porte"1..*"--"1..*" Model : peut accueillir >
 Model<|--Turbopropulseur
 Model<|--Turboreacteur
