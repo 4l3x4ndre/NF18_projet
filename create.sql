@@ -105,7 +105,7 @@ CREATE TABLE Vol (
 	FOREIGN KEY (porte_term,porte_num) REFERENCES Porte(terminal,num),
 	FOREIGN KEY (hote1) REFERENCES HoteAccueil(id_personne),
 	FOREIGN KEY (hote2) REFERENCES HoteAccueil(id_personne),
-	CHECK ( ((destination IS NOT NULL AND heureDepart IS NOT NULL AND heureEmbarquement IS NOT NULL AND hote1 IS NOT NULL AND hote2 IS NOT NULL AND heureEmbarquement < heureDepart AND type='VolDepart' AND hote1 <> hote2) AND (heureArrivee IS NULL AND provenance IS NULL)) OR ((heureArrivee IS NOT NULL AND provenance IS NOT NULL) AND (destination IS NULL AND heureDepart IS NULL AND heureEmbarquement IS NULL AND hote1 IS NULL AND hote2 IS NULL)) ) ,
+	CHECK ( ((destination IS NOT NULL AND heureDepart IS NOT NULL AND heureEmbarquement IS NOT NULL AND hote1 IS NOT NULL AND hote2 IS NOT NULL AND heureEmbarquement < heureDepart AND type='VolDepart' AND hote1 <> hote2) AND (heureArrivee IS NULL AND provenance IS NULL)) OR ((heureArrivee IS NOT NULL AND provenance IS NOT NULL) AND (destination IS NULL AND heureDepart IS NULL AND heureEmbarquement IS NULL AND hote1 IS NULL AND hote2 IS NULL AND type='VolArrivee')) ) ,
 	CHECK (pilote1 != pilote2),
 	PRIMARY KEY (id)
 );
