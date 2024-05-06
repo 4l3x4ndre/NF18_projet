@@ -9,8 +9,8 @@ WHERE V.provenance = 'Istanbul' OR V.destination = 'Istanbul';
 
 SELECT Avion.id, COUNT(DISTINCT STEWARTTRAVAIL.stewart) AS nb_stew
 FROM STEWARTTRAVAIL
-Join Vol on vol.id = STEWARTTRAVAIL.vol
-JOIN Avion ON Avion.id = vol.avion
+JOIN Vol on vol.id = STEWARTTRAVAIL.vol
+RIGHT OUTER JOIN Avion ON Avion.id = vol.avion
 JOIN Model ON Model.nom = Avion.model
 WHERE Model.nom = 'A307'
 GROUP BY Avion.id;
