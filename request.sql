@@ -7,7 +7,7 @@ WHERE V.provenance = 'Istanbul' OR V.destination = 'Istanbul';
 
 -- Quel est le nombre de steward de chaque avion de modèle A307
 
-SELECT Avion.id, COUNT(*) AS nb_stew
+SELECT Avion.id, COUNT(DISTINCT STEWARTTRAVAIL.stewart) AS nb_stew
 FROM STEWARTTRAVAIL
 Join Vol on vol.id = STEWARTTRAVAIL.vol
 JOIN Avion ON Avion.id = vol.avion
