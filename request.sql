@@ -7,13 +7,13 @@ WHERE V.provenance = 'Istanbul' OR V.destination = 'Istanbul';
 
 -- Quel est le nombre de steward de chaque avion de modèle A307
 
-SELECT vol, COUNT(*) AS nb_stew
+SELECT Avion.id, COUNT(*) AS nb_stew
 FROM STEWARTTRAVAIL
 Join Vol on vol.id = STEWARTTRAVAIL.vol
 JOIN Avion ON Avion.id = vol.avion
 JOIN Model ON Model.nom = Avion.model
 WHERE Model.nom = 'A307'
-GROUP BY vol;
+GROUP BY Avion.id;
 
 -- Quelles sont les 10 compagnies qui ont eu le plus de passagers sur les vols en partance de l'aéroport ?
 
