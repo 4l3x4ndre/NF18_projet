@@ -188,11 +188,11 @@ VALUES
     ('VOL003', 'GHI789', 'British Airways', 8, 35, 1, 'Terminal 3', 'Paris', '2024-05-12 12:00:00', '2024-05-12 11:00:00', 30, 31, NULL, NULL, 'VolDepart'),
     ('VOL004', 'JKL012', 'Delta Airlines', 9, 36, 2, 'Terminal 4', 'Rome', '2024-05-13 14:00:00', '2024-05-13 13:00:00', 32, 26, NULL, NULL, 'VolDepart'),
     ('VOL005', 'MNO345', 'Emirates', 7, 37, 3, 'Terminal 1', 'Dubai', '2024-05-14 16:00:00', '2024-05-14 15:00:00', 27, 28, NULL, NULL, 'VolDepart'),
-    ('VOL006', 'ABC123', 'Air France', 6, 38, 1, 'Terminal 1', 'Paris', NULL, NULL, NULL, NULL, 'New York', '2024-05-10 17:00:00', 'VolArrivee'),
-    ('VOL007', 'DEF456', 'Lufthansa', 8, 39, 2, 'Terminal 2', 'Istanbul', NULL, NULL, NULL, NULL, 'London', '2024-05-11 19:00:00', 'VolArrivee'),
-    ('VOL008', 'GHI789', 'British Airways', 9, 40, 3, 'Terminal 3', 'Rome', NULL, NULL, NULL, NULL, 'Paris', '2024-05-12 21:00:00', 'VolArrivee'),
-    ('VOL009', 'JKL012', 'Delta Airlines', 6, 33, 4, 'Terminal 4', 'New York', NULL, NULL, NULL, NULL, 'Rome', '2024-05-13 23:00:00', 'VolArrivee'),
-    ('VOL010', 'MNO345', 'Emirates', 8, 34, 5, 'Terminal 1', 'Dubai', NULL, NULL, NULL, NULL, 'Madrid', '2024-05-14 01:00:00', 'VolArrivee');
+    ('VOL006', 'ABC123', 'Air France', 6, 38, 1, 'Terminal 1', NULL, NULL, NULL, NULL, NULL, 'New York', '2024-05-10 17:00:00', 'VolArrivee'),
+    ('VOL007', 'DEF456', 'Lufthansa', 8, 39, 2, 'Terminal 2', NULL, NULL, NULL, NULL, NULL, 'Istanbul', '2024-05-11 19:00:00', 'VolArrivee'),
+    ('VOL008', 'GHI789', 'British Airways', 9, 40, 3, 'Terminal 3', NULL, NULL, NULL, NULL, NULL, 'Paris', '2024-05-12 21:00:00', 'VolArrivee'),
+    ('VOL009', 'JKL012', 'Delta Airlines', 6, 33, 4, 'Terminal 4', NULL, NULL, NULL, NULL, NULL, 'Rome', '2024-05-13 23:00:00', 'VolArrivee'),
+    ('VOL010', 'MNO345', 'Emirates', 8, 34, 5, 'Terminal 1', NULL, NULL, NULL, NULL, NULL, 'Madrid', '2024-05-14 01:00:00', 'VolArrivee');
 
 -- Insertion dans la table Bagage
 INSERT INTO Bagage (vol, passager, nombreBagage, poidsBagage)
