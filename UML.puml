@@ -75,7 +75,7 @@ abstract class Personne{
 
 abstract class Personnel{
 - id_personnel : int {key}
-- numeroTel : int {key}
+- numeroTel : str {key}
 }
 note top of Personnel : {10<=length("numeroTel")<=12}
 class Pilote{}
@@ -85,7 +85,7 @@ class Technique{}
 
 
 class Passager{
-- numeroTel : int {NULLABLE}
+- numeroTel : str {NULLABLE}
 
 }
 note top of Passager : {10<=length("numeroTel")<=12, NULLABLE}
