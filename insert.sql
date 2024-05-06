@@ -20,7 +20,7 @@ VALUES
     (17, 'Kim', 'Minho', '1989-04-03', '456 Gangnam-gu', 06000, 'Séoul', 'Corée du Sud'),
     (18, 'Lopez', 'Isabel', '1984-01-25', '101 Carrer de Mallorca', 08001, 'Barcelone', 'Espagne'),
     (19, 'Smith', 'Emma', '1997-09-08', '555 Park Avenue', 90001, 'Los Angeles', 'États-Unis'),
-    (20, 'Schmidt', 'Max', '1979-06-17', '789 Hauptstraße', 10115, 'Berlin', 'Allemagne')
+    (20, 'Schmidt', 'Max', '1979-06-17', '789 Hauptstraße', 10115, 'Berlin', 'Allemagne'),
     (21, 'Kowalski', 'Anna', '1980-08-14', '123 ul. Krakowska', 00-001, 'Varsovie', 'Pologne'),
     (22, 'Chang', 'Wei', '1985-12-02', '456 Nanjing Road', 200001, 'Shanghai', 'Chine'),
     (23, 'Alves', 'Ricardo', '1976-05-25', '789 Avenida Brasil', 200400, 'Rio de Janeiro', 'Brésil'),
@@ -49,7 +49,7 @@ VALUES
 
 
 -- Insertion dans la table Passager
-INSERT INTO Passager (id, numeroTel)
+INSERT INTO Passager (id_personne, numeroTel)
 VALUES
     (1, 0683058729),
     (2, 0692658294),
@@ -58,7 +58,7 @@ VALUES
     (5, 0635287482);
 
 -- Insertion dans la table Pilote
-INSERT INTO Pilote (id, numeroTel)
+INSERT INTO Pilote (id_personne, numeroTel)
 VALUES
     (6, 0657283758),
     (7, 0746289274),
@@ -74,7 +74,7 @@ VALUES
     (40, 6473827476);
 
 -- Insertion dans la table Technique
-INSERT INTO Technique (id, terminal, numeroTel)
+INSERT INTO Technique (id_personne, terminal, numeroTel)
 VALUES
     (10, 'Terminal 1', 0664828749),
     (11, 'Terminal 1', 0647282746),
@@ -88,7 +88,7 @@ VALUES
 
 
 -- Insertion dans la table Stewart
-INSERT INTO Stewart (id, numeroTel)
+INSERT INTO Stewart (id_personne, numeroTel)
 VALUES
     (19, 0748293747),
     (20, 0747292874),
@@ -104,7 +104,7 @@ VALUES
     (45, 0493938484);
 
 -- Insertion dans la table HoteAccueil
-INSERT INTO HoteAccueil (id, numeroTel)
+INSERT INTO HoteAccueil (id_personne, numeroTel)
 VALUES
     (26, 0637282748),
     (27, 0746292846),
@@ -120,7 +120,7 @@ VALUES
     ('Terminal 1', 48.8566, 2.3522),
     ('Terminal 2', 45.7640, 4.8357),
     ('Terminal 3', 43.2965, 5.3698),
-    ('Terminal 4', 40.4168, -3.7038),
+    ('Terminal 4', 40.4168, -3.7038);
 
 -- Insertion dans la table Porte
 INSERT INTO Porte (terminal, num)
@@ -180,7 +180,7 @@ VALUES
     ('GZK826', 'ATR73');
 
 -- Insertion de 10 vols d'arrivée
-INSERT INTO Vol (id, avion, compagnie, pilote1, pilote2, porte_num, porte_term, destination, heureDepart, heureEmnarquement, hote1, hote2, provenance, heureArrivee, type)
+INSERT INTO Vol (id, avion, compagnie, pilote1, pilote2, porte_num, porte_term, destination, heureDepart, heureEmbarquement, hote1, hote2, provenance, heureArrivee, type)
 VALUES
     ('VOL001', 'ABC123', 'Air France', 6, 33, 1, 'Terminal 1', 'New York', '2024-05-10 08:00:00', '2024-05-10 07:00:00', 26, 27, NULL, NULL, 'VolDepart'),
     ('VOL002', 'DEF456', 'Lufthansa', 7, 34, 2, 'Terminal 2', 'London', '2024-05-11 10:00:00', '2024-05-11 09:00:00', 28, 29, NULL, NULL, 'VolDepart'),
