@@ -51,7 +51,7 @@ VALUES
 -- Insertion dans la table Passager
 INSERT INTO Passager (id_personne, numeroTel)
 VALUES
-    (1, '0683058729'),
+    (3, '0683058729'),
     (2, '0692658294'),
     (3, '0690572927'),
     (4, '0726492749'),
@@ -60,7 +60,7 @@ VALUES
 -- Insertion dans la table Pilote
 INSERT INTO Pilote (id_personne, numeroTel)
 VALUES
-    (6, '0657283758'),
+    (3, '0657283758'),
     (7, '0746289274'),
     (8, '0664582746'),
     (9, '0748293648'),
