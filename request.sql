@@ -21,4 +21,5 @@ FROM BAGAGE JOIN Vol ON BAGAGE.vol = Vol.id
 WHERE Vol.type = 'VolDepart'
 GROUP BY vol.compagnie
 ORDER BY nb_pass DESC
-LIMIT 10;
+LIMIT 3;
+-- Nous avons entré 5 compagnies, nous mettons LIMIT 3 pour avoir les 3 avec le plus de passagers
