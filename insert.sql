@@ -188,11 +188,11 @@ VALUES
     ('VOL003', 'GHI789', 'British Airways', 8, 35, 1, 'Terminal 3', 'Paris', '2024-05-12 12:00:00', '2024-05-12 11:00:00', 30, 31, NULL, NULL, 'VolDepart'),
     ('VOL004', 'JKL012', 'Delta Airlines', 9, 36, 2, 'Terminal 4', 'Rome', '2024-05-13 14:00:00', '2024-05-13 13:00:00', 32, 26, NULL, NULL, 'VolDepart'),
     ('VOL005', 'MNO345', 'Emirates', 7, 37, 3, 'Terminal 1', 'Dubai', '2024-05-14 16:00:00', '2024-05-14 15:00:00', 27, 28, NULL, NULL, 'VolDepart'),
-    ('VOL006', 'ABC123', 'Air France', 6, 3, 1, 'Terminal 1', 'Paris', '2024-05-10 14:00:00', NULL, NULL, NULL, 'New York', '2024-05-10 17:00:00', 'VolArrivee'),
-    ('VOL007', 'DEF456', 'Lufthansa', 8, 39, 2, 'Terminal 2', 'Istanbul', '2024-05-11 16:00:00', NULL, NULL, NULL, 'London', '2024-05-11 19:00:00', 'VolArrivee'),
-    ('VOL008', 'GHI789', 'British Airways', 9, 40, 3, 'Terminal 3', 'Rome', '2024-05-12 18:00:00', NULL, NULL, NULL, 'Paris', '2024-05-12 21:00:00', 'VolArrivee'),
-    ('VOL009', 'JKL012', 'Delta Airlines', 6, 33, 4, 'Terminal 4', 'New York', '2024-05-13 20:00:00', NULL, NULL, NULL, 'Rome', '2024-05-13 23:00:00', 'VolArrivee'),
-    ('VOL010', 'MNO345', 'Emirates', 8, 34, 5, 'Terminal 1', 'Dubai', '2024-05-14 22:00:00', NULL, NULL, NULL, 'Madrid', '2024-05-14 01:00:00', 'VolArrivee');
+    ('VOL006', 'ABC123', 'Air France', 6, 3, 1, 'Terminal 1', 'Paris', NULL, NULL, NULL, NULL, 'New York', '2024-05-10 17:00:00', 'VolArrivee'),
+    ('VOL007', 'DEF456', 'Lufthansa', 8, 39, 2, 'Terminal 2', 'Istanbul', NULL, NULL, NULL, NULL, 'London', '2024-05-11 19:00:00', 'VolArrivee'),
+    ('VOL008', 'GHI789', 'British Airways', 9, 40, 3, 'Terminal 3', 'Rome', NULL, NULL, NULL, NULL, 'Paris', '2024-05-12 21:00:00', 'VolArrivee'),
+    ('VOL009', 'JKL012', 'Delta Airlines', 6, 33, 4, 'Terminal 4', 'New York', NULL, NULL, NULL, NULL, 'Rome', '2024-05-13 23:00:00', 'VolArrivee'),
+    ('VOL010', 'MNO345', 'Emirates', 8, 34, 5, 'Terminal 1', 'Dubai', NULL, NULL, NULL, NULL, 'Madrid', '2024-05-14 01:00:00', 'VolArrivee');
 
 -- Insertion dans la table Bagage
 INSERT INTO Bagage (vol, passager, nombreBagage, poidsBagage)
@@ -245,7 +245,7 @@ VALUES
 -- Insertion dans la table PeutAccueillir
 INSERT INTO PeutAccueillir (porte_num, porte_term, model)
 VALUES
-    (1, 'Terminal 1', 'A320'),
+    (1, 'Terminal 1', 'A307'),
     (2, 'Terminal 2', 'B737'),
     (1, 'Terminal 3', 'E190'),
     (1, 'Terminal 4', 'CRJ900'),
@@ -253,5 +253,4 @@ VALUES
     (3, 'Terminal 1', 'A321'),
     (1, 'Terminal 2', 'B727'),
     (1, 'Terminal 3', 'ATR73'),
-    (2, 'Terminal 4', 'ATR72'),
-    (1, 'Terminal 1', 'A320');
+    (2, 'Terminal 4', 'ATR72');
