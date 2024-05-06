@@ -21,7 +21,7 @@ VALUES
     (18, 'Lopez', 'Isabel', '1984-01-25', '101 Carrer de Mallorca', 08001, 'Barcelone', 'Espagne'),
     (19, 'Smith', 'Emma', '1997-09-08', '555 Park Avenue', 90001, 'Los Angeles', 'États-Unis'),
     (20, 'Schmidt', 'Max', '1979-06-17', '789 Hauptstraße', 10115, 'Berlin', 'Allemagne'),
-    (21, 'Kowalski', 'Anna', '1980-08-14', '123 ul. Krakowska', 00-001, 'Varsovie', 'Pologne'),
+    (21, 'Kowalski', 'Anna', '1980-08-14', '123 ul. Krakowska', 00001, 'Varsovie', 'Pologne'),
     (22, 'Chang', 'Wei', '1985-12-02', '456 Nanjing Road', 200001, 'Shanghai', 'Chine'),
     (23, 'Alves', 'Ricardo', '1976-05-25', '789 Avenida Brasil', 200400, 'Rio de Janeiro', 'Brésil'),
     (24, 'Ivanov', 'Dmitri', '1983-09-30', '101 Prospekt Mira', 101000, 'Moscou', 'Russie'),
@@ -51,68 +51,69 @@ VALUES
 -- Insertion dans la table Passager
 INSERT INTO Passager (id_personne, numeroTel)
 VALUES
-    (1, 0683058729),
-    (2, 0692658294),
-    (3, 0690572927),
-    (4, 0726492749),
-    (5, 0635287482);
+    (1, '0683058729'),
+    (2, '0692658294'),
+    (3, '0690572927'),
+    (4, '0726492749'),
+    (5, '0635287482');
 
 -- Insertion dans la table Pilote
 INSERT INTO Pilote (id_personne, numeroTel)
 VALUES
-    (6, 0657283758),
-    (7, 0746289274),
-    (8, 0664582746),
-    (9, 0748293648),
-    (33, 0774839379),
-    (34, 0785839384),
-    (35, 0648274647),
-    (36, 0647284647),
-    (37, 0747473828),
-    (38, 0748848327),
-    (39, 0648282747),
-    (40, 6473827476);
+    (6, '0657283758'),
+    (7, '0746289274'),
+    (8, '0664582746'),
+    (9, '0748293648'),
+    (33, '0774839379'),
+    (34, '0785839384'),
+    (35, '0648274647'),
+    (36, '0647284647'),
+    (37, '0747473828'),
+    (38, '0748848327'),
+    (39, '0648282747'),
+    (40, '0673827476');
 
 -- Insertion dans la table Technique
 INSERT INTO Technique (id_personne, terminal, numeroTel)
 VALUES
-    (10, 'Terminal 1', 0664828749),
-    (11, 'Terminal 1', 0647282746),
-    (12, 'Terminal 1', 0664828364),
-    (13, 'Terminal 2', 0656472736),
-    (14, 'Terminal 2', 0675482836),
-    (15, 'Terminal 3', 0675838378),
-    (16, 'Terminal 3', 0674593937),
-    (17, 'Terminal 4', 0674839284),
-    (18, 'Terminal 4', 0698349829),
+    (10, 'Terminal 1', '0664828749'),
+    (11, 'Terminal 1', '0647282746'),
+    (12, 'Terminal 1', '0664828364'),
+    (13, 'Terminal 2', '0656472736'),
+    (14, 'Terminal 2', '0675482836'),
+    (15, 'Terminal 3', '0675838378'),
+    (16, 'Terminal 3', '0674593937'),
+    (17, 'Terminal 4', '0674839284'),
+    (18, 'Terminal 4', '0698349829');
 
 
 -- Insertion dans la table Stewart
 INSERT INTO Stewart (id_personne, numeroTel)
 VALUES
-    (19, 0748293747),
-    (20, 0747292874),
-    (21, 0636282749),
-    (22, 0736282749),
-    (23, 0638283647),
-    (24, 0646282836),
-    (25, 0736282746),
-    (41, 0784828294),
-    (42, 0637287467),
-    (43, 0658337469),
-    (44, 0736278446),
-    (45, 0493938484);
+    (19, '0748293747'),
+    (20, '0747292874'),
+    (21, '0636282749'),
+    (22, '0736282749'),
+    (23, '0638283647'),
+    (24, '0646282836'),
+    (25, '0736282746'),
+    (41, '0784828294'),
+    (42, '0637287467'),
+    (43, '0658337469'),
+    (44, '0736278446'),
+    (45, '0493938484');
 
 -- Insertion dans la table HoteAccueil
 INSERT INTO HoteAccueil (id_personne, numeroTel)
 VALUES
-    (26, 0637282748),
-    (27, 0746292846),
-    (28, 0764828264),
-    (29, 0646282746),
-    (30, 0647292846),
-    (31, 0747292649),
-    (32, 0647283746);
+    (26, '0637282748'),
+    (27, '0746292846'),
+    (28, '0764828264'),
+    (29, '0646282746'),
+    (30, '0647292846'),
+    (31, '0747292649'),
+    (32, '0647283746');
+
 
 -- Insertion dans la table Terminal
 INSERT INTO Terminal (nom, longitude, latitude)
@@ -183,12 +184,12 @@ VALUES
 INSERT INTO Vol (id, avion, compagnie, pilote1, pilote2, porte_num, porte_term, destination, heureDepart, heureEmbarquement, hote1, hote2, provenance, heureArrivee, type)
 VALUES
     ('VOL001', 'ABC123', 'Air France', 6, 33, 1, 'Terminal 1', 'New York', '2024-05-10 08:00:00', '2024-05-10 07:00:00', 26, 27, NULL, NULL, 'VolDepart'),
-    ('VOL002', 'DEF456', 'Lufthansa', 7, 34, 2, 'Terminal 2', 'London', '2024-05-11 10:00:00', '2024-05-11 09:00:00', 28, 29, NULL, NULL, 'VolDepart'),
+    ('VOL002', 'DEF456', 'Lufthansa', 7, 34, 2, 'Terminal 2', 'Istanbul', '2024-05-11 10:00:00', '2024-05-11 09:00:00', 28, 29, NULL, NULL, 'VolDepart'),
     ('VOL003', 'GHI789', 'British Airways', 8, 35, 1, 'Terminal 3', 'Paris', '2024-05-12 12:00:00', '2024-05-12 11:00:00', 30, 31, NULL, NULL, 'VolDepart'),
     ('VOL004', 'JKL012', 'Delta Airlines', 9, 36, 2, 'Terminal 4', 'Rome', '2024-05-13 14:00:00', '2024-05-13 13:00:00', 32, 26, NULL, NULL, 'VolDepart'),
     ('VOL005', 'MNO345', 'Emirates', 7, 37, 3, 'Terminal 1', 'Dubai', '2024-05-14 16:00:00', '2024-05-14 15:00:00', 27, 28, NULL, NULL, 'VolDepart'),
-    ('VOL006', 'ABC123', 'Air France', 6, 38, 1, 'Terminal 1', 'Paris', '2024-05-10 14:00:00', NULL, NULL, NULL, 'New York', '2024-05-10 17:00:00', 'VolArrivee'),
-    ('VOL007', 'DEF456', 'Lufthansa', 8, 39, 2, 'Terminal 2', 'Berlin', '2024-05-11 16:00:00', NULL, NULL, NULL, 'London', '2024-05-11 19:00:00', 'VolArrivee'),
+    ('VOL006', 'ABC123', 'Air France', 6, 3, 1, 'Terminal 1', 'Paris', '2024-05-10 14:00:00', NULL, NULL, NULL, 'New York', '2024-05-10 17:00:00', 'VolArrivee'),
+    ('VOL007', 'DEF456', 'Lufthansa', 8, 39, 2, 'Terminal 2', 'Istanbul', '2024-05-11 16:00:00', NULL, NULL, NULL, 'London', '2024-05-11 19:00:00', 'VolArrivee'),
     ('VOL008', 'GHI789', 'British Airways', 9, 40, 3, 'Terminal 3', 'Rome', '2024-05-12 18:00:00', NULL, NULL, NULL, 'Paris', '2024-05-12 21:00:00', 'VolArrivee'),
     ('VOL009', 'JKL012', 'Delta Airlines', 6, 33, 4, 'Terminal 4', 'New York', '2024-05-13 20:00:00', NULL, NULL, NULL, 'Rome', '2024-05-13 23:00:00', 'VolArrivee'),
     ('VOL010', 'MNO345', 'Emirates', 8, 34, 5, 'Terminal 1', 'Dubai', '2024-05-14 22:00:00', NULL, NULL, NULL, 'Madrid', '2024-05-14 01:00:00', 'VolArrivee');
@@ -246,11 +247,11 @@ INSERT INTO PeutAccueillir (porte_num, porte_term, model)
 VALUES
     (1, 'Terminal 1', 'A320'),
     (2, 'Terminal 2', 'B737'),
-    (3, 'Terminal 3', 'E190'),
-    (4, 'Terminal 4', 'CRJ900'),
-    (5, 'Terminal 1', 'ATR72'),
-    (1, 'Terminal 1', 'A321'),
-    (2, 'Terminal 2', 'B727'),
-    (3, 'Terminal 3', 'ATR73'),
-    (4, 'Terminal 4', 'ATR72'),
-    (5, 'Terminal 1', 'A320');
+    (1, 'Terminal 3', 'E190'),
+    (1, 'Terminal 4', 'CRJ900'),
+    (2, 'Terminal 1', 'ATR72'),
+    (3, 'Terminal 1', 'A321'),
+    (1, 'Terminal 2', 'B727'),
+    (1, 'Terminal 3', 'ATR73'),
+    (2, 'Terminal 4', 'ATR72'),
+    (1, 'Terminal 1', 'A320');
