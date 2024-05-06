@@ -63,4 +63,8 @@ PeutAccueillir (#porte_num ⇒ Porte.num, #porte_term ⇒ Porte.terminal, #model
 	- Projection(Avion, id) = Projection(Vol, avion)
 
 
+SQL : // On pourrait utiliser un trigger permettant de respecter la contrainte : "Les intersections dans les tables Stewart, Pilote, Technique, HoteAccueil prisent deux à deux sont toutes égales à l’ensemble vide."
+
+
+
 
