@@ -57,6 +57,26 @@ VALUES
     (4, '0726492749'),
     (5, '0635287482');
 
+-- Insertion dans la table Terminal
+INSERT INTO Terminal (nom, longitude, latitude)
+VALUES
+    ('Terminal 1', 48.8566, 2.3522),
+    ('Terminal 2', 45.7640, 4.8357),
+    ('Terminal 3', 43.2965, 5.3698),
+    ('Terminal 4', 40.4168, -3.7038);
+
+-- Insertion dans la table Porte
+INSERT INTO Porte (terminal, num)
+VALUES
+    ('Terminal 1', 1),
+    ('Terminal 1', 2),
+    ('Terminal 1', 3),
+    ('Terminal 2', 1),
+    ('Terminal 2', 2),
+    ('Terminal 3', 1),
+    ('Terminal 4', 1),
+    ('Terminal 4', 2);
+
 -- Insertion dans la table Pilote
 INSERT INTO Pilote (id_personne, numeroTel)
 VALUES
@@ -114,26 +134,6 @@ VALUES
     (31, '0747292649'),
     (32, '0647283746');
 
-
--- Insertion dans la table Terminal
-INSERT INTO Terminal (nom, longitude, latitude)
-VALUES
-    ('Terminal 1', 48.8566, 2.3522),
-    ('Terminal 2', 45.7640, 4.8357),
-    ('Terminal 3', 43.2965, 5.3698),
-    ('Terminal 4', 40.4168, -3.7038);
-
--- Insertion dans la table Porte
-INSERT INTO Porte (terminal, num)
-VALUES
-    ('Terminal 1', 1),
-    ('Terminal 1', 2),
-    ('Terminal 1', 3),
-    ('Terminal 2', 1),
-    ('Terminal 2', 2),
-    ('Terminal 3', 1),
-    ('Terminal 4', 1),
-    ('Terminal 4', 2);
 
 -- Insertion dans la table CompagnieFabrique
 INSERT INTO CompagnieFabrique (nom)
