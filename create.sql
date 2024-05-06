@@ -47,5 +47,3 @@ CREATE TABLE Porte (
     num INT CHECK (num > 0),
     PRIMARY KEY (terminal, num)
 );
-
-// On pourrait utiliser un trigger permettant de respecter la contrainte : "Les intersections dans les tables Stewart, Pilote, Technique, HoteAccueil prisent deux à deux sont toutes égales à l’ensemble vide."
