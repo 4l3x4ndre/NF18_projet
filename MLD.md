@@ -16,15 +16,15 @@
 
 Personne(#id_personne : int, nom : str, prenom : str, dateNaiss : date, rue : str, codepostal : int, ville : str, pays : str) avec (date < current date et codepostal > 0)
 
-Passager (#id => Personne.id_personne, numeroTel : int) avec { 10 <= length(numeroTel) <= 12, NULLABLE }
+Passager (#id => Personne.id_personne, numeroTel : str) avec { 10 <= length(numeroTel) <= 12, NULLABLE }
 
-Pilote(#id => Personne.id_personne, numeroTel : int) avec { 10 <= length(numeroTel) <= 12 }
+Pilote(#id => Personne.id_personne, numeroTel : str) avec { 10 <= length(numeroTel) <= 12 }
 
-Technique(#id => Personne.id_personne, terminal => Terminal.nom,  numeroTel : int) avec { 10 <= length(numeroTel) <= 12 }
+Technique(#id => Personne.id_personne, terminal => Terminal.nom,  numeroTel : str) avec { 10 <= length(numeroTel) <= 12 }
 
-Stewart(#id => Personne.id_personne, numeroTel : int)  avec {10 <= length(numeroTel) <= 12 }
+Stewart(#id => Personne.id_personne, numeroTel : str)  avec {10 <= length(numeroTel) <= 12 }
 
-HoteAccueil(#id => Personne.id_personne, numeroTel : int)  avec { 10 <= length(numeroTel) <= 12 }
+HoteAccueil(#id => Personne.id_personne, numeroTel : str)  avec { 10 <= length(numeroTel) <= 12 }
 
 Terminal(#nom : String, longitude : float, latitude : float) avec { (longitude, latitude) unique AND -90<latitude<90 AND -180<longitude<180 }
 
