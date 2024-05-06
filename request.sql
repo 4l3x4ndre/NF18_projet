@@ -5,11 +5,6 @@ SELECT SUM(poidsBagage) AS poids_total
 FROM Bagage B JOIN Vol V ON B.vol = V.id
 WHERE V.provenance = 'Istanbul' OR V.destination = 'Istanbul';
 
--- Requête s'il n'y a pas de vol de telle ville
-SELECT SUM(poidsBagage) AS poids_total
-FROM Bagage B RIGHT OUTER JOIN Vol V ON B.vol = V.id
-WHERE V.provenance = 'Istanbuleee' OR V.destination = 'Istanbuleee';
-
 -- Quel est le nombre de steward de chaque avion de modèle A307
 
 SELECT Avion.id, COUNT(DISTINCT STEWARTTRAVAIL.stewart) AS nb_stew
