@@ -38,7 +38,8 @@ Model (#nom : String, nombrePlaces : int, vitesseMax : float, type:enum{Turbopro
 
 Avion (#id : str, model => Model.nom)
 
-Vol (#id : str, avion => Avion.id, compagnie => CompagnieVol.nom, pilote1 => Pilote.id_personne, pilote2 => Pilote.id_personne, porte_num => Porte.num, porte_term => Porte.term, destination : str, heureDepart : datetime, heureEmnarquement : datetime, hote1 => HoteAccueil.id_personne, hote2 => HoteAccueil.id_personne, provenance : str, heureArrivee : datetime, type : {VolArrivee / VolDepart }) avec {id composé de chiffres et lettres, (destination AND  heureDepart AND heureEmbarquement AND hote1 AND hote2 nulls si type = volArrivee) AND(heureArrivee AND provenance nulls si type = volDepart) AND (destination AND  heureDepart AND heureEmbarquement AND hote1 AND hote2 not nulls si type = volDepart) AND (heureArrivee AND provenance not nulls si type=VolArrivee), heureEmbarquement < heureDepart, pilote1 ≠ pilote2, hote1 ≠ hote2 si type = volDepart}
+Vol (#id : str, avion => Avion.id, compagnie => CompagnieVol.nom, pilote1 => Pilote.id_personne, pilote2 => Pilote.id_personne, porte_num => Porte.num, porte_term => Porte.term, destination : str, heureDepart : datetime, heureEmnarquement : datetime, hote1 => HoteAccueil.id_personne, hote2 => HoteAccueil.id_personne, provenance : str, heureArrivee : datetime, type : {VolArrivee / VolDepart }) avec 
+{id composé de chiffres et lettres, ((destination not null AND heureDepart not null AND heureEmbarquement not null AND hote1 not null AND hote2 not null AND hote1 <> hote2) AND (heureArrivee NULL AND provenance NULL)) OR ((heureArrivee NOT NULL AND provenance NOT NULL) AND (destination NULL AND heureDepart NULL AND NULL AND heureEmbarquement NULL and hote1 NULL AND hote2 NULL AND type='VolArrivee'))}
 
 Bagage(#vol => Vol.id, #passager => Passager.id_personne, nombreBagage : int, poidsBagage : float)
 
