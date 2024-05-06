@@ -9,15 +9,16 @@ WHERE V.provenance = 'Istanbul' OR V.destination = 'Istanbul';
 
 SELECT vol, COUNT(*) AS nb_stew
 FROM STEWARTTRAVAIL
-JOIN Avion ON Avion.id = STEWARTTRAVAIL.vol
+Join Vol on vol.id = STEWARTTRAVAIL.vol
+JOIN Avion ON Avion.id = vol.avion
 JOIN Model ON Model.nom = Avion.model
 WHERE Model.nom = 'A307'
 GROUP BY vol;
 
 -- Quelles sont les 10 compagnies qui ont eu le plus de passagers sur les vols en partance de l'aéroport ?
 
-SELECT vol.compagnie, COUNT(*) AS nb_pass
-FROM BAGAGE JOIN Vol ON BAGAGE.vol = Vol.id
+SELECT vol.compagnie, COUNT(bagage.passager) AS nb_pass
+FROM Vol JOIN BAGAGE ON Vol.id = BAGAGE.vol
 WHERE Vol.type = 'VolDepart'
 GROUP BY vol.compagnie
 ORDER BY nb_pass DESC
