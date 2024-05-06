@@ -1,12 +1,12 @@
 CREATE TABLE Personne (
     id_personne INT PRIMARY KEY,
-    nom VARCHAR(255) NOT NULL,
-    prenom VARCHAR(255) NOT NULL,
+    nom VARCHAR(30) NOT NULL,
+    prenom VARCHAR(30) NOT NULL,
     dateNaiss DATE CHECK (dateNaiss < CURRENT_DATE),
     rue VARCHAR(255) NOT NULL,
     codepostal INT CHECK (codepostal > 0),
-    ville VARCHAR(255) NOT NULL,
-    pays VARCHAR(255) NOT NULL
+    ville VARCHAR(50) NOT NULL,
+    pays VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE Passager (
