@@ -51,7 +51,7 @@ VALUES
 -- Insertion dans la table Passager
 INSERT INTO Passager (id_personne, numeroTel)
 VALUES
-    (3, '0683058729'),
+    (1, '0683058729'),
     (2, '0692658294'),
     (3, '0690572927'),
     (4, '0726492749'),
@@ -60,7 +60,7 @@ VALUES
 -- Insertion dans la table Pilote
 INSERT INTO Pilote (id_personne, numeroTel)
 VALUES
-    (3, '0657283758'),
+    (6, '0657283758'),
     (7, '0746289274'),
     (8, '0664582746'),
     (9, '0748293648'),
@@ -156,7 +156,7 @@ VALUES
 -- Insertion dans la table Model
 INSERT INTO Model (nom, nombrePlaces, vitesseMax, type, vitMaxRot, pousseeMax, compagnieFabrication)
 VALUES
-    ('A320', 180, 900, 'Turboreacteur', NULL, 120000, 'Airbus'),
+    ('A307', 180, 900, 'Turboreacteur', NULL, 120000, 'Airbus'),
     ('A321', 190, 950, 'Turboreacteur', NULL, 125000, 'Airbus'),
     ('B737', 160, 850, 'Turboreacteur', NULL, 110000, 'Boeing'),
     ('B727', 170, 900, 'Turboreacteur', NULL, 100000, 'Boeing'),
@@ -168,8 +168,8 @@ VALUES
 -- Insertion dans la table Avion
 INSERT INTO Avion (id, model)
 VALUES
-    ('ABC123', 'A320'),
-    ('ABC762', 'A320'),
+    ('ABC123', 'A307'),
+    ('ABC762', 'A307'),
     ('ABC629', 'A321'),
     ('DEF456', 'B737'),
     ('DZK829', 'B737'),
