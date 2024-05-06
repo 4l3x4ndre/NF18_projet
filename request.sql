@@ -16,11 +16,9 @@ GROUP BY vol;
 
 -- Quelles sont les 10 compagnies qui ont eu le plus de passagers sur les vols en partance de l'aéroport ?
 
-
-SELECT compagnie, COUNT(*) AS nb_pass
-FROM Vol
-WHERE type = 'VolDepart'
-GROUP BY compagnie
+SELECT vol.compagnie, COUNT(*) AS nb_pass
+FROM BAGAGE JOIN Vol ON BAGAGE.vol = Vol.id
+WHERE Vol.type = 'VolDepart'
+GROUP BY vol.compagnie
 ORDER BY nb_pass DESC
 LIMIT 10;
-
