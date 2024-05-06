@@ -36,7 +36,7 @@ VALUES
     (33, 'Gomez', 'Elena', '1986-02-15', '789 Carrer de Valencia', 08015, 'Barcelone', 'Espagne'),
     (34, 'Chen', 'Xiao', '1990-09-20', '101 Renmin Road', 200002, 'Shanghai', 'Chine'),
     (35, 'Kovács', 'Ádám', '1975-06-10', '555 Kossuth Lajos tér', 1051, 'Budapest', 'Hongrie'),
-    (36, 'Nowak', 'Magdalena', '1988-04-28', '789 Mickiewicza', 00-001, 'Varsovie', 'Pologne'),
+    (36, 'Nowak', 'Magdalena', '1988-04-28', '789 Mickiewicza', 00001, 'Varsovie', 'Pologne'),
     (37, 'Müller', 'Hans', '1983-11-15', '101 Wilhelmstraße', 10115, 'Berlin', 'Allemagne'),
     (38, 'Andersen', 'Ingrid', '1977-08-22', '456 Amagerbrogade', 1051, 'Copenhague', 'Danemark'),
     (39, 'Martinez', 'Antonio', '1982-03-10', '789 Calle Mayor', 28004, 'Madrid', 'Espagne'),
