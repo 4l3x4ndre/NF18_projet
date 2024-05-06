@@ -222,6 +222,7 @@ VALUES
 INSERT INTO StewartTravail (stewart, vol)
 VALUES
     (19, 'VOL001'),
+    (43, 'VOL001'),
     (20, 'VOL001'),
     (21, 'VOL002'),
     (22, 'VOL002'),
