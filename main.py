@@ -11,11 +11,13 @@ def init(cur):
     cur.execute(open("create.sql", "r").read())
     cur.execute(open("insert.sql", "r").read())
 
-def voir_tables():
-    conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
-    cursor = conn.cursor()
+def voir_tables(conn,cursor):
+
+    tables = ['Vol','Passager', 'Bagage', 'Avion']
     table_name = input('Parmis les tables : "Vol", "Passager", "Bagage", "Avion", laquelle voulez vous voir ? :')
-    if table_name == "Passager":
+    if table_name not in tables :
+        print("Impossible d'afficher cette table")
+    elif table_name == "Passager":
         sql = "SELECT nom, prenom, dateNaiss, rue, codepostal, pays, ville, numeroTel From Passager Join Personne on Personne.id_personne = Passager.id_personne"
         print(" nom, prenom, dateNaiss, rue, codepostal, pays, ville, numeroTel")
     else :
@@ -30,42 +32,43 @@ def voir_tables():
     while ligne :
         print(ligne)
         ligne = cursor.fetchone()
-    cursor.close()
-    conn.close()
 
-
-def ajouter_passager():
-    conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
-    cursor = conn.cursor()
+def ajouter_passager(conn,cursor):
     vol_id = input("Entrez l'ID du vol : ")
     passager_id = int(input("Entrez l'ID du passager : "))
     nombreBagage= int(input("Entrez le nombre de bagage du passager : "))
     poidsBagage = float(input("Entrez le poids des bagages : "))
-    sql ="SELECT nombrePlaces FROM Model JOIN Avion ON Model.nom = Avion.model JOIN Vol ON Vol.avion = Avion.id WHERE Vol.id =%s"
-    cursor.execute(sql, (vol_id,))
-    nb_place = cursor.fetchone()[0]
-    sql = "SELECT COUNT(passager) FROM Bagage JOIN Vol ON Bagage.vol = Vol.id WHERE Vol.id =%s"
-    cursor.execute(sql, (vol_id,))
-    nb_passager = cursor.fetchone()[0]
-    if (nb_place>nb_passager):
-        cursor.execute("INSERT INTO Bagage (vol, passager,nombreBagage,poidsBagage) VALUES (%s, %s,%s,%s)",
-                   (vol_id, passager_id, nombreBagage, poidsBagage))
-        print("Passager ajouté avec succès.")
-        conn.commit()
+    sql="SELECT passager FROM BAGAGE WHERE passager=%s AND vol=%s"
+    cursor.execute(sql,(passager_id,vol_id))
+    passager = cursor.fetchone()
+    if passager is None:
+        sql ="SELECT nombrePlaces FROM Model JOIN Avion ON Model.nom = Avion.model JOIN Vol ON Vol.avion = Avion.id WHERE Vol.id =%s"
+        cursor.execute(sql, (vol_id,))
+        nb_place = cursor.fetchone()[0]
+        sql = "SELECT COUNT(passager) FROM Bagage JOIN Vol ON Bagage.vol = Vol.id WHERE Vol.id =%s"
+        cursor.execute(sql, (vol_id,))
+        nb_passager = cursor.fetchone()[0]
+        if (nb_place>nb_passager):
+            cursor.execute("INSERT INTO Bagage (vol, passager,nombreBagage,poidsBagage) VALUES (%s, %s,%s,%s)",
+                       (vol_id, passager_id, nombreBagage, poidsBagage))
+            print("Passager ajouté avec succès.")
+            conn.commit()
+        else:
+            print("Avion plein")
     else:
-        print("Avion plein")
+        print("Le passager est déjà dans le vol")
     cursor.close()
     conn.close()
 
 
-def supprimer_passager():
+def supprimer_passager(conn,cursor):
     conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
     cursor = conn.cursor()
     vol_id = input("Entrez l'ID du vol : ")
     passager_id = int(input("Entrez l'ID du passager : "))
     sql="SELECT * FROM Bagage WHERE (vol,passager)=(%s,%s)"
     cursor.execute(sql,(vol_id,passager_id))
-    passager = cursor.fetchone()[0]
+    passager = cursor.fetchone()
     if (passager is None):
         print("Le passager n'est pas inscrit sur le vol")
     else:
@@ -76,7 +79,7 @@ def supprimer_passager():
     conn.close()
 
 
-def modifier_passager():
+def modifier_passager(conn,cursor):
     conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
     cursor = conn.cursor()
     passager_id = int(input("Entrez l'ID du passager à modifier : "))
@@ -103,7 +106,7 @@ def modifier_passager():
     conn.close()
 
 
-def view_requests():
+def view_requests(conn,cursor):
     conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
     cursor = conn.cursor()
     # Vous devrez ajuster ces requêtes selon les vraies requêtes que vous souhaitez exécuter
@@ -126,8 +129,6 @@ def main():
     conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
     cur = conn.cursor()
     init(cur)
-    conn.close()
-
     while True:
         print("\nMenu Principal")
         print("1. Voir les tables")
@@ -139,20 +140,23 @@ def main():
         choice = input("Entrez votre choix : ")
 
         if choice == "1":
-            voir_tables()
+            voir_tables(conn,cur)
         elif choice == "2":
-            ajouter_passager()
+            ajouter_passager(conn,cur)
         elif choice == "3":
-            supprimer_passager()
+            supprimer_passager(conn,cur)
         elif choice == "4":
-            modifier_passager()
+            modifier_passager(conn,cur)
         elif choice == "5":
-            view_requests()
+            view_requests(conn,cur)
         elif choice == "6":
             print("Au revoir !")
             break
         else:
+
             print("Choix invalide, veuillez réessayer.")
+    cur.close()
+    conn.close()
 
 if __name__ == "__main__":
     main()
