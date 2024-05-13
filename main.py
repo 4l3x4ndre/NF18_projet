@@ -1,10 +1,10 @@
 import psycopg2
 import datetime
 # Configuration de la connexion à la base de données
-HOST = "localhost"
-USER = "leolamy"
-PASSWORD = ""
-DATABASE = "postgres"
+USER = "nf18p013"
+HOST = "tuxa.sme.utc"
+PASSWORD = "hIcD85qXLDBu"
+DATABASE = "dbnf18p013"
 
 def init(cur):
     cur.execute(open("drop.sql", "r").read())
@@ -22,11 +22,11 @@ def voir_tables(conn,cursor):
         print(" nom, prenom, dateNaiss, rue, codepostal, pays, ville, numeroTel")
     else :
         sql = "SELECT * FROM " + table_name + " ; "
-    cursor.execute("SELECT * FROM " + table_name + " LIMIT 0; ")
-    column = []
-    for DESC in cursor.description:
-        column.append(DESC[0])
-    print(column)
+        cursor.execute("SELECT * FROM " + table_name + " LIMIT 0; ")
+        column = []
+        for DESC in cursor.description:
+            column.append(DESC[0])
+        print(column)
     cursor.execute(sql)
     ligne = cursor.fetchone()
     while ligne :
