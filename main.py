@@ -3,7 +3,7 @@ import datetime
 # Configuration de la connexion à la base de données
 HOST = "localhost"
 USER = "leolamy"
-PASSWORD = "Toutoukarl02-"
+PASSWORD = ""
 DATABASE = "postgres"
 
 def init(cur):
