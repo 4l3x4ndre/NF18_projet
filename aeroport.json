@@ -1,0 +1,112 @@
+{
+  "Personne": [
+    {
+      "id_personne": 1,
+      "nom": "Doe",
+      "prenom": "John",
+      "dateNaiss": "1980-01-01",
+      "rue": "123 Main St",
+      "codepostal": 12345,
+      "ville": "Sample City",
+      "pays": "Sample Country",
+      "passager": {
+        "numeroTel": "1234567890"
+      }
+    }
+  ],
+  "Terminal": [
+    {
+      "nom": "Terminal 1",
+      "longitude": 50.1234,
+      "latitude": -10.5678
+    }
+  ],
+  "Porte": [
+    {
+      "terminal": "Terminal 1",
+      "num": 1
+    }
+  ],
+  "CompagnieFabrique": [
+    {
+      "nom": "Airbus"
+    }
+  ],
+  "CompagnieVol": [
+    {
+      "nom": "Air France"
+    }
+  ],
+  "Model": [
+    {
+      "nom": "A320",
+      "nombrePlaces": 180,
+      "vitesseMax": 840.0,
+      "type": "Turboreacteur",
+      "pousseeMax": 20000.0,
+      "compagnieFabrication": "Airbus"
+    }
+  ],
+  "Avion": [
+    {
+      "id": "AF123",
+      "model": "A320"
+    }
+  ],
+  "Vol": [
+    {
+      "id": "FL001",
+      "avion": {
+        "id": "AF123",
+        "model": "A320"
+      },
+      "compagnie": {
+        "nom": "Air France"
+      },
+      "pilote1": {
+        "id_personne": 2,
+        "nom": "Smith",
+        "prenom": "Alice",
+        "numeroTel": "0987654321"
+      },
+      "pilote2": {
+        "id_personne": 3,
+        "nom": "Johnson",
+        "prenom": "Bob",
+        "numeroTel": "1122334455"
+      },
+      "porte": {
+        "terminal": "Terminal 1",
+        "num": 1
+      },
+      "destination": "New York",
+      "heureDepart": "2024-06-03T10:00:00Z",
+      "heureEmbarquement": "2024-06-03T09:30:00Z",
+      "provenance": null,
+      "heureArrivee": null,
+      "type": "VolDepart"
+    }
+  ],
+  "Bagage": [
+    {
+      "vol": "FL001",
+      "passager": {
+        "id_personne": 1,
+        "nom": "Doe",
+        "prenom": "John",
+        "numeroTel": "1234567890"
+      },
+      "nombreBagage": 2,
+      "poidsBagage": 25.5
+    }
+  ],
+  "PeutAccueillir": [
+    {
+      "porte": {
+        "terminal": "Terminal 1",
+        "num": 1
+      },
+      "model": "A320"
+    }
+  ]
+}
