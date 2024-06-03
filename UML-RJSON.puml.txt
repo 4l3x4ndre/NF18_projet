@@ -1,0 +1,62 @@
+@startuml
+enum TypeVol{
+- VolArrivee
+- VolDepart
+}
+
+class Vol{
+- id : str {key} 
+- compagnieVol : str
+- porte_num : int
+- porte_term : str
+- destination : str
+- heureDepart : datetime
+- heureEmbarquement : datetime
+- provenance : str
+- heureArrivee : datetime
+- type : TypeVol
+}
+note left of Vol: {heureEmbarquement<heureDepart pour type : VolDepart}
+note top of Vol : nombre de passagers est infèrieur ou égal au nombre de places du modèle de l'avion associé au vol
+
+class Bagage{
+- passager_id : int
+- nombreBagage : int
+- poidsBagage : float
+}
+
+class Passager{
+- passager_id : int
+- nom : str
+- prenom : str
+- numeroTel : str
+- dateNaissance : date
+- rue : str
+- codePostal : str
+- ville : str
+- pays : str
+}
+note top of Passager : {10<=length("numeroTel")<=13, NULLABLE}
+
+enum TypeAvion{
+- TurboReacteur
+- TurboPropulseur
+}
+
+class Avion{
+- avion_id : str
+- model : str
+- compagnieFabrication : str
+- nombrePlaces : int
+- vitesseMax : float
+- type : TypeAvion
+- pousseeMax [0..1] : float
+- vitesseMaxRot [0..1] : float
+}
+note top of Avion : {pousseeMax NOT NULL XOR vitesseMaxRot NOT NULL}
+
+Bagage"*"--"1..*" Vol : est dans >
+Passager"*"--"1..*" Vol : prend >
+Avion"1"--"*" Vol : utilise <
+
+@enduml

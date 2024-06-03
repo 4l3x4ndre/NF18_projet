@@ -1,0 +1,40 @@
+Terminal : nom → longitude, latitude
+    - Fermeture transitive : {nom → longitude, nom → latitude}
+    - CM : {nom → longitude, nom → latitude}
+    - La relation est 1 NF car elle possède une clé (nom) et des données atomiques
+    - La relation est 2 NF car aucun attribut non-clé est determiné par une partie de la clé
+    - La relation est 3 NF car aucun attribut non-clé détermine un autre attribut non-clé
+
+
+Porte : Aucune DF
+    - Pas de fermeture transitive
+    - Pas de CM
+    - La relation est 1 NF car elle possède une clé (terminal, num) et des données atomiques
+    - La relation est 2 NF car aucun attribut non-clé est determiné par une partie de la clé
+    - La relation est 3 NF car aucun attribut non-clé détermine un autre attribut non-clé
+
+
+Avion : id → modèle 
+    - Fermeture transitive : {id → modèle}
+    - CM : {id → modèle}
+    - La relation est 1 NF car elle possède une clé (id) et des données atomiques
+    - La relation est 2 NF car aucun attribut non-clé est determiné par une partie de la clé
+    - La relation est 3 NF car aucun attribut non-clé détermine un autre attribut non-clé
+
+
+Modèle : nom → nombrePlaces, vitesseMax, type, vitMaxRot, pousseeMax, CompagnieFabrication
+    - Fermeture transitive : {nom → nombrePlaces, nom → vitesseMax, nom → type, nom → vitMaxRot, nom → pousseeMax, nom → CompagnieFabrication}
+    - CM : {nom → nombrePlaces, nom → vitesseMax, nom → type, nom → vitMaxRot, nom → pousseeMax, nom → CompagnieFabrication}
+    - La relation est 1 NF car elle possède une clé (nom) et des données atomiques
+    - La relation est 2 NF car aucun attribut non-clé est determiné par une partie de la clé
+    - La relation est 3 NF car aucun attribut non-clé détermine un autre attribut non-clé
+
+
+Employé : id → nom, prenom, dateNaissance, rue, codePostal, ville, pays ; ville → codePostal ; codePostal → ville
+    - Fermeture transitive : {id → nom, id → prenom, id → dateNaissance, id → rue, id → codePostal, id → ville, id → pays ; ville → codePostal ; codePostal → ville}
+    - CM : {id → nom, id → prenom, id → dateNaissance, id → rue, id → codePostal, id → pays ; ville → codePostal ; codePostal → ville}
+    - La relation est 1 NF car elle possède une clé (nom) et des données atomiques
+    - La relation est 2 NF car aucun attribut non-clé est determiné par une partie de la clé
+    - La relation n'est pas 3NF car codePostal → ville
+        - On décompose en 2 relations : Employé(#id_personne : int, nom : str, prenom : str, dateNaiss : date, rue : str, codePostal => villeCodePostal, pays : str)
+                                        villeCodePostal(#codePostal : str, ville : str)
