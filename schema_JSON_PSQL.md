@@ -1,19 +1,13 @@
 | Information                   | Valeur                               |
 | --                            | --                                   |
-| Version du document           | 1.0.0                                |
-| Dernière modification         | 2024-06-07                           |
+| Version du document           | 2.0.0                                |
+| Dernière modification         | 2024-06-10                           |
 | Auteurs | AMRANI Alexandre, DELBECQUE Lucas, DELMAERE Mathis, LAMY Léo |
 
 ---
 
 **<mark style='background:#ffadad'>Tous les champs sont NOT NULL par défaut.</mark>** 
 
-### Attribut JSON bagage (Type : JSON)
-
-Données attendues : Une liste d'objets représentant les bagages des passagers. Chaque objet doit contenir :
-- passager_id (Type : Entier) : Identifiant unique du passager (référencent `id_personne` du champ JSON passager).
-- nombreBagage (Type : Entier) : Nombre de bagages enregistrés par le passager.
-- poidsBagage (Type : Flottant) : Poids total des bagages du passager en kilogrammes.
 
 ### Attribut JSON passager (Type : JSON)
 
@@ -30,23 +24,33 @@ Données attendues : Une liste d'objets représentant les passagers du vol. Chaq
 - pays (Type : Chaîne de caractères) : Pays de résidence du passager.
 - numeroTel (Type : Chaîne de caractères) : Numéro de téléphone du passager.
 	- Le format est 10 chiffres ou 9 chiffres précédés d'un indicatif téléphonique ("+33")
+- bagages (Type : JSON) : Objet représentant les bagages de ce passager. Chaque objet doit contenir :
+	- passager_id (Type : Entier) : Identifiant unique du passager (référencent `id_personne` du champ JSON passager).
+	- nombreBagage (Type : Entier) : Nombre de bagages enregistrés par le passager.
+	- poidsBagage (Type : Flottant) : Poids total des bagages du passager en kilogrammes.
+
+Contraintes :
+- bagages.poidsBagage >= 0
+- bagages.nombreBagage >=0
+- bagages.nombreBagage > 0 $\Longleftrightarrow$  bagages.poidsBagage > 0
 
 ### Attribut JSON avion (Type : JSON)
 
 Données attendues : Un objet représentant les informations sur l'avion. L'objet doit contenir :
 - avion_id (Type : Chaîne de caractères) : Identifiant unique de l'avion.
-- model (Type : Chaîne de caractères) : Modèle de l'avion.
-- compagnieFabrication (Type : Chaîne de caractères) : Compagnie ayant fabriqué l'avion.
-- nombrePlaces (Type : Entier) : Nombre de places disponibles dans l'avion.
-	- Doit être supérieur ou égale à zéro.
-- vitesseMax (Type : Flottant) : Vitesse maximale de l'avion en km/h.
-	- Doit être supérieur à zéro.
-- type (Type : Chaîne de caractères) : Type de moteur de l'avion 
-	- choix obligatoire parmi : TurboRéacteur; TurboPropulseur.
-- pousseeMax (Type : Flottant, optionnel) : Poussée maximale des moteurs de l'avion (en kN).
-	- Doit être supérieur à zéro.
+- model (Type : JSON) : Objet contenant toutes les informations du modèles, à savoir
+	- nom (Type : Chaîne de caractères) : Nom du modèle de l'avion.
+	- compagnieFabrication (Type : Chaîne de caractères) : Compagnie ayant fabriqué l'avion.
+	- nombrePlaces (Type : Entier) : Nombre de places disponibles dans l'avion.
+		- Doit être supérieur ou égale à zéro.
+	- vitesseMax (Type : Flottant) : Vitesse maximale de l'avion en km/h.
+		- Doit être supérieur à zéro.
+	- type (Type : Chaîne de caractères) : Type de moteur de l'avion 
+		- choix obligatoire parmi : TurboRéacteur; TurboPropulseur.
+	- pousseeMax (Type : Flottant, optionnel) : Poussée maximale des moteurs de l'avion (en kN).
+		- Doit être supérieur à zéro.
 
-Précisions :
+Contraintes :
 - Si le type est TurboRéacteur, alors la vitesseMax est renseignée et non pousseeMax
 - Si le type est TurboPropulseur, alors la pousseeMax est renseignée et non vitesseMax
 
@@ -65,5 +69,5 @@ Données attendues : Un objet représentant les informations sur le premier pilo
 - ville (Type : Chaîne de caractères) : Ville de résidence du pilote.
 - pays (Type : Chaîne de caractères) : Pays de résidence du pilote.
 
-Précisions : 
+Contraintes : 
 - Les champs pilote1 et pilote2 doivent être différents : ils indiquent les deux pilotes, différents, du vol.
