@@ -4,15 +4,14 @@ import json
 
 # Configuration de la connexion à la base de données
 HOST = "localhost"
-USER = "leolamy"
-PASSWORD = "Toutoukarl02-"
-DATABASE = "postgres"
+USER = "me"
+PASSWORD = "secret"
+DATABASE = "mydb"
 
 def init(cur):
     cur.execute(open("main_JSON_PSQL.sql", "r").read())
 
-def voir_vol(conn,cursor):
-
+def voir_id_vols(conn, cursor):
     table_name = "VolNR"
     sql = "SELECT id, compagnieVol FROM " + table_name + " ; "
     cursor.execute("SELECT id, compagnieVol FROM " + table_name + " LIMIT 0; ")
@@ -25,6 +24,12 @@ def voir_vol(conn,cursor):
     while ligne :
         print(ligne)
         ligne = cursor.fetchone()
+
+
+def voir_vol(conn,cursor):
+    
+    voir_id_vols(conn, cursor)
+
     id_vol = input("Quel vol souhaitez-vous voir ? (id) : ")
     sql = "SELECT * FROM VolNR WHERE id = %s"
     cursor.execute(sql, (id_vol,))
@@ -33,6 +38,9 @@ def voir_vol(conn,cursor):
         print(ligne)
         ligne = cursor.fetchone()
 def ajouter_passager(conn, cursor):
+    print("\nLes vols existants sont : ")
+    voir_id_vols(conn, cursor)
+    print()
     vol_id = input("Entrez l'ID du vol : ")
     nom = input("Nom: ")
     prenom = input("Prénom: ")
@@ -73,13 +81,16 @@ def ajouter_passager(conn, cursor):
     else:
         # Le vol n'existe pas, le créer avec le premier passager
         cursor.execute("INSERT INTO VolNR (vol_id, passager) VALUES (%s, %s);",
-                      (vol_id, json.dumps([nouveau_passager])))
+                      (id, json.dumps([nouveau_passager])))
 
     print("Passager ajouté avec succès.")
     conn.commit()
 
 
 def supprimer_passager(conn, cursor):
+    print("\nLes vols existants sont : ")
+    voir_id_vols(conn, cursor)
+    print()
     vol_id = input("Entrez l'ID du vol pour voir les passagers : ")
     sql = "SELECT passager FROM VolNR WHERE id = %s"
     cursor.execute(sql, (vol_id,))
@@ -94,7 +105,7 @@ def supprimer_passager(conn, cursor):
     for idx, passager in enumerate(passagers, 1):
         print(f"{idx}. {passager['nom']} {passager['prenom']}")
 
-    passager_idx = int(input("Entrez le numéro du passager à supprimer : ")) - 1
+    passager_idx = int(input(f"Entrez l'index du passager à supprimer dans la liste (entre [1, {len(passagers)}]) :")) - 1
     if 0 <= passager_idx < len(passagers):
         passager_a_supprimer = passagers[passager_idx]
 
@@ -114,6 +125,29 @@ def supprimer_passager(conn, cursor):
         print("Numéro de passager invalide.")
 
 def view_requests(conn,cursor):
+    #conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
+    #cursor = conn.cursor()
+    req1="SELECT SUM((p->'bagages'->>'poidsBagage')::numeric) AS poids_total_bagages FROM schema_json_psql.VolNR v, JSON_ARRAY_ELEMENTS(v.passager) p WHERE v.destination = 'Istanbul' OR v.provenance = 'Istanbul';"
+    cursor.execute(req1)
+    result = cursor.fetchone()
+    
+    if result and result[0] is not None:
+        poids_total_bagages = result[0]
+        print(f"Poids total : {poids_total_bagages}")
+    else:
+        print("No baggage weight found for the specified conditions.")
+
+    """
+    req2="SELECT AVG((avion->>'model')::json->>'nombrePlaces')::numeric AS nombre_moyen_stewards FROM schema_json_psql.VolNR WHERE (avion->>'model')::json->>'nom' = 'A307';"
+    cursor.execute(req2)
+    print(cursor.fetchall())
+    """
+
+    req3="SELECT compagnieVol, SUM(json_array_length(passager::json)) AS total_passagers FROM schema_json_psql.VolNR WHERE type = 'VolDepart' GROUP BY compagnieVol ORDER BY total_passagers DESC LIMIT 10;"   
+    cursor.execute(req3)
+    print(f"Les compagnies sont : {cursor.fetchall()}")
+
+def view_requests0(conn,cursor):
     queries = [
          "SELECT SUM((passager->>'bagages')::json->>'poidsBagage')::numeric AS poids_total_bagages FROM schema_json_psql.VolNR WHERE destination = 'Istanbul' OR provenance = 'Istanbul';",
         "SELECT AVG((avion->>'model')::json->>'nombrePlaces')::numeric AS nombre_moyen_stewards FROM schema_json_psql.VolNR WHERE (avion->>'model')::json->>'nom' = 'A307';.id = STEWARTTRAVAIL.vol RIGHT OUTER JOIN Avion ON Avion.id = vol.avion JOIN Model ON Model.nom = Avion.model WHERE Model.nom = 'A307' GROUP BY Avion.id;",
