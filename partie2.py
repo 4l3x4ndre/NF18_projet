@@ -7,15 +7,13 @@ PASSWORD = "Toutoukarl02-"
 DATABASE = "postgres"
 
 def init(cur):
-    cur.execute(open("drop.sql", "r").read())
-    cur.execute(open("create.sql", "r").read())
-    cur.execute(open("insert.sql", "r").read())
+    cur.execute(open("main_JSON_PSQL.sql", "r").read())
 
 def voir_vol(conn,cursor):
 
-    table_name = "Vol"
-    sql = "SELECT * FROM " + table_name + " ; "
-    cursor.execute("SELECT * FROM " + table_name + " LIMIT 0; ")
+    table_name = "VolNR"
+    sql = "SELECT id, compagnieVol FROM " + table_name + " ; "
+    cursor.execute("SELECT id, compagnieVol FROM " + table_name + " LIMIT 0; ")
     column = []
     for DESC in cursor.description:
         column.append(DESC[0])
@@ -25,9 +23,27 @@ def voir_vol(conn,cursor):
     while ligne :
         print(ligne)
         ligne = cursor.fetchone()
+    id_vol = input("Quel vol souhaitez-vous voir ? (id) : ")
+    sql = "SELECT * FROM VolNR WHERE id = %s"
+    cursor.execute(sql, (id_vol,))
+    ligne = cursor.fetchone()
+    while ligne:
+        print(ligne)
+        ligne = cursor.fetchone()
 
 def ajouter_passager(conn,cursor):
     vol_id = input("Entrez l'ID du vol : ")
+    nom = input("Nom: ")
+    prenom = input("Prénom: ")
+    dateNaiss = input("Date de naissance (YYYY-MM-DD): ")
+    rue = input("Rue: ")
+    codepostal = input("Code postal: ")
+    ville = input("Ville: ")
+    pays = input("Pays: ")
+    numeroTel = input("Numéro de téléphone: ")
+    nombreBagage = int(input("Nombre de bagages: "))
+    poidsBagage = float(input("Poids total des bagages: "))
+
     passager_id = int(input("Entrez l'ID du passager : "))
     nombreBagage= int(input("Entrez le nombre de bagage du passager : "))
     poidsBagage = float(input("Entrez le poids des bagages : "))
@@ -133,7 +149,7 @@ def main():
         choice = input("Entrez votre choix : ")
 
         if choice == "1":
-            voir_tables(conn,cur)
+            voir_vol(conn,cur)
         elif choice == "2":
             ajouter_passager(conn,cur)
         elif choice == "3":
