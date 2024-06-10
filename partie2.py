@@ -13,15 +13,8 @@ def init(cur):
 
 def voir_vol(conn,cursor):
 
-    tables = ['Vol','Passager', 'Bagage', 'Avion']
-    table_name = input('Parmis les tables : "Vol", "Passager", "Bagage", "Avion", laquelle voulez vous voir ? :')
-    if table_name not in tables :
-        print("Impossible d'afficher cette table")
-    elif table_name == "Passager":
-        sql = "SELECT nom, prenom, dateNaiss, rue, codepostal, pays, ville, numeroTel From Passager Join Personne on Personne.id_personne = Passager.id_personne"
-        print(" nom, prenom, dateNaiss, rue, codepostal, pays, ville, numeroTel")
-    else :
-        sql = "SELECT * FROM " + table_name + " ; "
+    table_name = "Vol"
+    sql = "SELECT * FROM " + table_name + " ; "
     cursor.execute("SELECT * FROM " + table_name + " LIMIT 0; ")
     column = []
     for DESC in cursor.description:
