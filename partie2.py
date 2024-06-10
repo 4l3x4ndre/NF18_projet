@@ -1,5 +1,6 @@
-import psycopg2
 import datetime
+import psycopg2
+
 # Configuration de la connexion à la base de données
 HOST = "localhost"
 USER = "leolamy"
@@ -43,29 +44,26 @@ def ajouter_passager(conn,cursor):
     numeroTel = input("Numéro de téléphone: ")
     nombreBagage = int(input("Nombre de bagages: "))
     poidsBagage = float(input("Poids total des bagages: "))
-
-    passager_id = int(input("Entrez l'ID du passager : "))
-    nombreBagage= int(input("Entrez le nombre de bagage du passager : "))
-    poidsBagage = float(input("Entrez le poids des bagages : "))
-    sql="SELECT passager FROM BAGAGE WHERE passager=%s AND vol=%s"
-    cursor.execute(sql,(passager_id,vol_id))
-    passager = cursor.fetchone()
-    if passager is None:
-        sql ="SELECT nombrePlaces FROM Model JOIN Avion ON Model.nom = Avion.model JOIN Vol ON Vol.avion = Avion.id WHERE Vol.id =%s"
-        cursor.execute(sql, (vol_id,))
-        nb_place = cursor.fetchone()[0]
-        sql = "SELECT COUNT(passager) FROM Bagage JOIN Vol ON Bagage.vol = Vol.id WHERE Vol.id =%s"
-        cursor.execute(sql, (vol_id,))
-        nb_passager = cursor.fetchone()[0]
-        if (nb_place>nb_passager):
-            cursor.execute("INSERT INTO Bagage (vol, passager,nombreBagage,poidsBagage) VALUES (%s, %s,%s,%s)",
-                       (vol_id, passager_id, nombreBagage, poidsBagage))
-            print("Passager ajouté avec succès.")
-            conn.commit()
-        else:
-            print("Avion plein")
-    else:
-        print("Le passager est déjà dans le vol")
+    nouveau_passager = {
+        "nom": nom,
+        "prenom": prenom,
+        "dateNaiss": dateNaiss,
+        "rue": rue,
+        "codepostal": codepostal,
+        "ville": ville,
+        "pays": pays,
+        "numeroTel": numeroTel,
+        "bagages": {
+            "nombreBagage": nombreBagage,
+            "poidsBagage": poidsBagage
+        }
+    }
+    #if (nb_place > nb_passager):
+    sql = "INSERT INTO VolNR.passager VALUES (?)",
+    cursor.execute(sql,(nouveau_passager))
+    print("Passager ajouté avec succès.")
+    conn.commit()
+    #else:
     cursor.close()
     conn.close()
 
