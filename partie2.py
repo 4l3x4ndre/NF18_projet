@@ -1,5 +1,6 @@
 import datetime
 import psycopg2
+import json
 
 # Configuration de la connexion à la base de données
 HOST = "localhost"
@@ -31,8 +32,7 @@ def voir_vol(conn,cursor):
     while ligne:
         print(ligne)
         ligne = cursor.fetchone()
-
-def ajouter_passager(conn,cursor):
+def ajouter_passager(conn, cursor):
     vol_id = input("Entrez l'ID du vol : ")
     nom = input("Nom: ")
     prenom = input("Prénom: ")
@@ -42,8 +42,9 @@ def ajouter_passager(conn,cursor):
     ville = input("Ville: ")
     pays = input("Pays: ")
     numeroTel = input("Numéro de téléphone: ")
-    nombreBagage = int(input("Nombre de bagages: "))
-    poidsBagage = float(input("Poids total des bagages: "))
+    nombreBagage = int(input("Ajouter le nombre total de bagages : "))
+    poidsBagage = float(input("Ajouter le poids total des bagages : "))
+
     nouveau_passager = {
         "nom": nom,
         "prenom": prenom,
@@ -54,83 +55,52 @@ def ajouter_passager(conn,cursor):
         "pays": pays,
         "numeroTel": numeroTel,
         "bagages": {
-            "nombreBagage": nombreBagage,
-            "poidsBagage": poidsBagage
+            "nombreBagage" : nombreBagage,
+            "poidsBagage" : poidsBagage,
         }
     }
-    #if (nb_place > nb_passager):
-    sql = "INSERT INTO VolNR.passager VALUES (?)",
-    cursor.execute(sql,(nouveau_passager))
+
+    # Vérifier si le vol existe déjà
+    cursor.execute("SELECT VolNR.passager FROM VolNR WHERE id = %s;", (vol_id,))
+    result = cursor.fetchone()
+
+    if result:
+        # Le vol existe, ajouter le passager à la liste
+        passagers_existants = result[0]
+        passagers_existants.append(nouveau_passager)
+        cursor.execute("UPDATE VolNR SET passager = %s WHERE id = %s;",
+                      (json.dumps(passagers_existants), vol_id))
+    else:
+        # Le vol n'existe pas, le créer avec le premier passager
+        cursor.execute("INSERT INTO VolNR (vol_id, passager) VALUES (%s, %s);",
+                      (vol_id, json.dumps([nouveau_passager])))
+
     print("Passager ajouté avec succès.")
     conn.commit()
-    #else:
-    cursor.close()
-    conn.close()
-
 
 def supprimer_passager(conn,cursor):
-    conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
-    cursor = conn.cursor()
+    voir_vol(conn,cursor)
     vol_id = input("Entrez l'ID du vol : ")
-    passager_id = int(input("Entrez l'ID du passager : "))
-    sql="SELECT * FROM Bagage WHERE (vol,passager)=(%s,%s)"
-    cursor.execute(sql,(vol_id,passager_id))
+    sql="SELECT passager ->> 'id_personne' AS id_passager, passager ->> 'nom' AS nom, passager ->> 'prenom' AS prenom FROM VolNR WHERE VolNR.id = %s"
+    cursor.execute(sql(vol_id,))
+    passager=cursor.fetchall()
+    for ligne in passager:
+        print(ligne)
+    passager_id = int(input("Entrez l'ID du passager à supprimer : "))
+    sql="SELECT passager ->> 'id_personne' AS id_passager FROM VolNR WHERE VolNR.passager.id_personne = %s"
+    cursor.execute(sql, (passager_id,))
     passager = cursor.fetchone()
     if (passager is None):
         print("Le passager n'est pas inscrit sur le vol")
     else:
-        cursor.execute("DELETE FROM Bagage WHERE vol = %s AND passager = %s", (vol_id,passager_id))
+        sql = "UPDATE VolNR SET passager=(SELECT jsonb_agg(passager) FROM jsonb_array_elements(passager) AS passager)WHERE passager->>'id_personne'<>%s"
+        cursor.execute(sql, (passager_id,))
         conn.commit()
         print("Passager supprimé avec succès.")
     cursor.close()
     conn.close()
 
-
-def modifier_passager(conn,cursor):
-    conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
-    cursor = conn.cursor()
-    passager_id = int(input("Entrez l'ID du passager à modifier : "))
-    sql = "SELECT numeroTel FROM Passager WHERE id_personne =%s"
-    cursor.execute(sql,(passager_id,))
-    passager = cursor.fetchone()[0]
-    if passager is not None :
-        new_prenom = input("Donnez le nouveau prénom (ou l'ancien) de la personne : ")
-        new_nom = input("Donnez le nouveau nom (ou l'ancien) de la personne : ")
-        annee = int(input("Entrez l'année : "))
-        mois = int(input("Entrez le mois : "))
-        jour = int(input("Entrez le jour : "))
-        new_date = datetime.date(annee, mois, jour)
-        new_rue= input("Donnez la nouvelle rue (ou l'ancienne) de la personne : ")
-        new_cp = input("Donnez le nouveau code postal (ou l'ancien) de la personne : ")
-        new_ville = input("Donnez la nouvelle ville (ou l'ancienne) de la personne : ")
-        new_pays = input("Donnez le nouveau pays (ou l'ancien) de la personne : ")
-        cursor.execute("UPDATE Personne SET nom = %s,  prenom = %s, dateNaiss = %s,  rue = %s, ville = %s,  pays = %s , codepostal = %s  WHERE id_personne = %s", (new_nom, new_prenom, new_date,new_rue, new_ville, new_pays, new_cp, passager_id))
-        conn.commit()
-        print("Passager modifié avec succès.")
-    else :
-        print("Ce passager n'est pas présent dans notre base de données")
-    cursor.close()
-    conn.close()
-
-
-def view_requests(conn,cursor):
-    conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
-    cursor = conn.cursor()
-    # Vous devrez ajuster ces requêtes selon les vraies requêtes que vous souhaitez exécuter
-    queries = [
-        "SELECT SUM(poidsBagage) AS poids_total FROM Bagage B JOIN Vol V ON B.vol = V.id WHERE V.provenance = 'Istanbul' OR V.destination = 'Istanbul';",
-        "SELECT Avion.id, COUNT(DISTINCT STEWARTTRAVAIL.stewart) AS nb_stew FROM STEWARTTRAVAIL JOIN Vol on vol.id = STEWARTTRAVAIL.vol RIGHT OUTER JOIN Avion ON Avion.id = vol.avion JOIN Model ON Model.nom = Avion.model WHERE Model.nom = 'A307' GROUP BY Avion.id;",
-        "SELECT vol.compagnie, COUNT(DISTINCT bagage.passager) AS nb_pass FROM Vol LEFT OUTER JOIN BAGAGE ON Vol.id = BAGAGE.vol WHERE Vol.type = 'VolDepart' GROUP BY vol.compagnie ORDER BY nb_pass DESC LIMIT 3;"
-    ]
-    for query in queries:
-        cursor.execute(query)
-        results = cursor.fetchall()
-        print("Résultats de la requête :")
-        for result in results:
-            print(result)
-    cursor.close()
-    conn.close()
-
+#def view_requests(conn,cursor):
 
 def main():
     conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
@@ -141,9 +111,8 @@ def main():
         print("1. Voir les tables")
         print("2. Ajouter un passager à un vol")
         print("3. Supprimer un passager d’un vol")
-        print("4. Modifier un passager")
-        print("5. Voir les résultats des requêtes")
-        print("6. Quitter")
+        print("4. Voir les résultats des requêtes")
+        print("5. Quitter")
         choice = input("Entrez votre choix : ")
 
         if choice == "1":
@@ -153,10 +122,8 @@ def main():
         elif choice == "3":
             supprimer_passager(conn,cur)
         elif choice == "4":
-            modifier_passager(conn,cur)
-        elif choice == "5":
             view_requests(conn,cur)
-        elif choice == "6":
+        elif choice == "5":
             print("Au revoir !")
             break
         else:
