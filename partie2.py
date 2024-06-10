@@ -78,29 +78,53 @@ def ajouter_passager(conn, cursor):
     print("Passager ajouté avec succès.")
     conn.commit()
 
-def supprimer_passager(conn,cursor):
-    voir_vol(conn,cursor)
-    vol_id = input("Entrez l'ID du vol : ")
-    sql="SELECT passager ->> 'id_personne' AS id_passager, passager ->> 'nom' AS nom, passager ->> 'prenom' AS prenom FROM VolNR WHERE VolNR.id = %s"
-    cursor.execute(sql(vol_id,))
-    passager=cursor.fetchall()
-    for ligne in passager:
-        print(ligne)
-    passager_id = int(input("Entrez l'ID du passager à supprimer : "))
-    sql="SELECT passager ->> 'id_personne' AS id_passager FROM VolNR WHERE VolNR.passager.id_personne = %s"
-    cursor.execute(sql, (passager_id,))
-    passager = cursor.fetchone()
-    if (passager is None):
-        print("Le passager n'est pas inscrit sur le vol")
-    else:
-        sql = "UPDATE VolNR SET passager=(SELECT jsonb_agg(passager) FROM jsonb_array_elements(passager) AS passager)WHERE passager->>'id_personne'<>%s"
-        cursor.execute(sql, (passager_id,))
-        conn.commit()
-        print("Passager supprimé avec succès.")
-    cursor.close()
-    conn.close()
 
-#def view_requests(conn,cursor):
+def supprimer_passager(conn, cursor):
+    vol_id = input("Entrez l'ID du vol pour voir les passagers : ")
+    sql = "SELECT passager FROM VolNR WHERE id = %s"
+    cursor.execute(sql, (vol_id,))
+    result = cursor.fetchone()
+
+    if not result or not result[0]:
+        print(f"Aucun passager trouvé pour le vol {vol_id}.")
+        return
+
+    passagers = result[0]
+    print("Passagers du vol :")
+    for idx, passager in enumerate(passagers, 1):
+        print(f"{idx}. {passager['nom']} {passager['prenom']}")
+
+    passager_idx = int(input("Entrez le numéro du passager à supprimer : ")) - 1
+    if 0 <= passager_idx < len(passagers):
+        passager_a_supprimer = passagers[passager_idx]
+
+        # Supprime le passager de la liste
+        passagers.pop(passager_idx)
+
+        # Met à jour la base de données
+        sql = "UPDATE VolNR SET passager = %s WHERE id = %s"
+        cursor.execute(sql, (json.dumps(passagers), vol_id))
+        conn.commit()
+
+        if cursor.rowcount > 0:
+            print(f"Passager {passager_a_supprimer['nom']} {passager_a_supprimer['prenom']} supprimé avec succès.")
+        else:
+            print("Aucun passager n'a été supprimé. Vérifiez les informations.")
+    else:
+        print("Numéro de passager invalide.")
+
+def view_requests(conn,cursor):
+    queries = [
+         "SELECT SUM((passager->>'bagages')::json->>'poidsBagage')::numeric AS poids_total_bagages FROM schema_json_psql.VolNR WHERE destination = 'Istanbul' OR provenance = 'Istanbul';",
+        "SELECT AVG((avion->>'model')::json->>'nombrePlaces')::numeric AS nombre_moyen_stewards FROM schema_json_psql.VolNR WHERE (avion->>'model')::json->>'nom' = 'A307';.id = STEWARTTRAVAIL.vol RIGHT OUTER JOIN Avion ON Avion.id = vol.avion JOIN Model ON Model.nom = Avion.model WHERE Model.nom = 'A307' GROUP BY Avion.id;",
+        "SELECT compagnieVol, SUM(json_array_length(passagerjson)) AS total_passagers FROM schema_json_psql.VolNR WHERE type = 'VolDepart' GROUP BY compagnieVol ORDER BY total_passagers DESC LIMIT 10;"
+    ]
+    for query in queries:
+        cursor.execute(query)
+        results = cursor.fetchall()
+        print("Résultats de la requête :")
+        for result in results:
+            print(result)
 
 def main():
     conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
