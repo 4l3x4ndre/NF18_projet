@@ -1,40 +1,32 @@
-Terminal : nom → longitude, latitude
-    - Fermeture transitive : {nom → longitude, nom → latitude}
-    - CM : {nom → longitude, nom → latitude}
-    - La relation est 1 NF car elle possède une clé (nom) et des données atomiques
-    - La relation est 2 NF car aucun attribut non-clé est determiné par une partie de la clé
-    - La relation est 3 NF car aucun attribut non-clé détermine un autre attribut non-clé
+On s'intéresse à la Normalisation fonctionnelle de {idVol, nomCompagnieVol, pilote1Vol, pilote2Vol, destinationVol, heureDepartVol, heureEmbarquementVol, hoteAccueil1Vol, hoteAccueil2Vol, provenanceVol, heureArriveeVol, typeVol, idAvion, modelAvion, nombreBagage, poidsBagage, idPassager, numeroTelPassager, numPorte, nomTerminal, longitudeTerminal, latitudeTerminal}
 
+Les dépendances fonctionnelles que nous pouvons extraire de cet ensemble sont : {idVol → nomCompagnieVol, idVol → pilote1Vol, idVol → pilote2Vol, idVol → destinationVol, idVol → heureDepartVol, idVol → heureEmbarquementVol, idVol → hoteAccueil1Vol, idVol → hoteAccueil2Vol, idVol → provenanceVol, idVol → heureArriveeVol, idVol → typeVol, idVol → idAvion, idAvion → modelAvion, idPassager → numeroTelPassager, (idVol, idPassager) → nombreBagage, (idVol, idPassager) → poidsBagage, idVol → numPorte, idVol → nomTerminal, nomTerminal → longitudeTerminal, nomTerminal → latitudeTerminal}
 
-Porte : Aucune DF
-    - Pas de fermeture transitive
-    - Pas de CM
-    - La relation est 1 NF car elle possède une clé (terminal, num) et des données atomiques
-    - La relation est 2 NF car aucun attribut non-clé est determiné par une partie de la clé
-    - La relation est 3 NF car aucun attribut non-clé détermine un autre attribut non-clé
+La fermeture transitive F+ est {idVol → nomCompagnieVol, idVol → pilote1Vol, idVol → pilote2Vol, idVol → destinationVol, idVol → heureDepartVol, idVol → heureEmbarquementVol, idVol → hoteAccueil1Vol, idVol → hoteAccueil2Vol, idVol → provenanceVol, idVol → heureArriveeVol, idVol → typeVol, idVol → idAvion, idAvion → modelAvion, idVol → modelAvion, idPassager → numeroTelPassager, (idVol, idPassager) → nombreBagage, (idVol, idPassager) → poidsBagage, idVol → numPorte, idVol → nomTerminal, nomTerminal → longitudeTerminal, idVol → longitudeTerminal, nomTerminal → latitudeTerminal, idVol → latitudeTerminal}
 
+La CM de ces DF est celle trouvée en premier lieu : {idVol → nomCompagnieVol, idVol → pilote1Vol, idVol → pilote2Vol, idVol → destinationVol, idVol → heureDepartVol, idVol → heureEmbarquementVol, idVol → hoteAccueil1Vol, idVol → hoteAccueil2Vol, idVol → provenanceVol, idVol → heureArriveeVol, idVol → typeVol, idVol → idAvion, idAvion → modelAvion, idPassager → numeroTelPassager, (idVol, idPassager) → nombreBagage, (idVol, idPassager) → poidsBagage, idVol → numPorte, idVol → nomTerminal, nomTerminal → longitudeTerminal, nomTerminal → latitudeTerminal}
+En effet, toutes les DF sont de toute évidence élémentaire sauf 2 : (idVol, idPassager) → nombreBagage, (idVol, idPassager) → poidsBagage
+Or si l'on retire l'un des deux éléments à gauche de la DF, on ne retrouve plus la partie droite (un idVol ne détermine pas à lui seul ne poids des bagages d'un passager)
+Les DF sont donc toutes élémentaires
 
-Avion : id → modèle 
-    - Fermeture transitive : {id → modèle}
-    - CM : {id → modèle}
-    - La relation est 1 NF car elle possède une clé (id) et des données atomiques
-    - La relation est 2 NF car aucun attribut non-clé est determiné par une partie de la clé
-    - La relation est 3 NF car aucun attribut non-clé détermine un autre attribut non-clé
+La clé que nous pouvons extraire est : (idVol, idPassager) car ces deux attributs permettent de retrouver tous les autres à partir des DF. Elles sont également minimales car aucun attribut ne les définis (ils doivent donc à tout prix être dans la clé)
 
+On se retrouve alors avec la relation R : (#idVol, #idPassager, numeroTelPassager, nomCompagnieVol, pilote1Vol, pilote2Vol, destinationVol, heureDepartVol, heureEmbarquementVol, hoteAccueil1Vol, hoteAccueil2Vol, provenanceVol, heureArriveeVol, typeVol, idAvion, modelAvion, nombreBagage, poidsBagage, numPorte, nomTerminal, longitudeTerminal, latitudeTerminal)
 
-Modèle : nom → nombrePlaces, vitesseMax, type, vitMaxRot, pousseeMax, CompagnieFabrication
-    - Fermeture transitive : {nom → nombrePlaces, nom → vitesseMax, nom → type, nom → vitMaxRot, nom → pousseeMax, nom → CompagnieFabrication}
-    - CM : {nom → nombrePlaces, nom → vitesseMax, nom → type, nom → vitMaxRot, nom → pousseeMax, nom → CompagnieFabrication}
-    - La relation est 1 NF car elle possède une clé (nom) et des données atomiques
-    - La relation est 2 NF car aucun attribut non-clé est determiné par une partie de la clé
-    - La relation est 3 NF car aucun attribut non-clé détermine un autre attribut non-clé
+Cette relation est 1 NF car tous les attributs sont supposés atomiques et que notre relation possède une clé
 
+Cette relation n'est cependant pas 2NF car une partie de la clé détermine des attributs non clé.
+On découpe alors la relation en : 
+R1 : (#idVol, #idPassager, nombreBagage, poidsBagage)
+R2 : (#idVol, nomCompagnieVol, pilote1Vol, pilote2Vol, destinationVol, heureDepartVol, heureEmbarquementVol, hoteAccueil1Vol, hoteAccueil2Vol, provenanceVol, heureArriveeVol, typeVol, idAvion, modelAvion, nomTerminal, numPorte, longitudeTerminal, latitudeTerminal)
+R3 : (#idPassager, numeroTelPassager)
 
-Employé : id → nom, prenom, dateNaissance, rue, codePostal, ville, pays ; ville → codePostal ; codePostal → ville
-    - Fermeture transitive : {id → nom, id → prenom, id → dateNaissance, id → rue, id → codePostal, id → ville, id → pays ; ville → codePostal ; codePostal → ville}
-    - CM : {id → nom, id → prenom, id → dateNaissance, id → rue, id → codePostal, id → pays ; ville → codePostal ; codePostal → ville}
-    - La relation est 1 NF car elle possède une clé (nom) et des données atomiques
-    - La relation est 2 NF car aucun attribut non-clé est determiné par une partie de la clé
-    - La relation n'est pas 3NF car codePostal → ville
-        - On décompose en 2 relations : Employé(#id_personne : int, nom : str, prenom : str, dateNaiss : date, rue : str, codePostal => villeCodePostal, pays : str)
-                                        villeCodePostal(#codePostal : str, ville : str)
+Ces relations ne sont pas non plus 3NF car des attributs non-clés déterminent des attributs non-clés.
+On découpé alors les relations en :
+R1 : (#idVol, #idPassager, nombreBagage, poidsBagage)
+R2 : (#idVol, nomCompagnieVol, pilote1Vol, pilote2Vol, destinationVol, heureDepartVol, heureEmbarquementVol, hoteAccueil1Vol, hoteAccueil2Vol, provenanceVol, heureArriveeVol, typeVol, idAvion => R4.idAvion, nomTerminal => R5.nomTerminal, numPorte)
+R3 : (#idPassager, numeroTelPassager)
+R4 : (#idAvion, modelAvion)
+R5 : (#nomTerminal, longitudeTerminal, latitudeTerminal)
+
+On retrouve alors les relations présentes dans notre MLD, excepté : la relation "Porte (#terminal ⇒ Terminal.nom, #num : int)"
