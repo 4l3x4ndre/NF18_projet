@@ -3,15 +3,19 @@ import psycopg2
 import json
 
 # Configuration de la connexion à la base de données
-HOST = "localhost"
-USER = "me"
-PASSWORD = "secret"
-DATABASE = "mydb"
+USER = "nf18p013"
+HOST = "tuxa.sme.utc"
+PASSWORD = "hIcD85qXLDBu"
+DATABASE = "dbnf18p013"
+
 
 def init(cur):
     cur.execute(open("main_JSON_PSQL.sql", "r").read())
 
 def voir_id_vols(conn, cursor):
+    """
+    Affiche la liste (vol id , compagnie vol) de la table VolNR
+    """
     table_name = "VolNR"
     sql = "SELECT id, compagnieVol FROM " + table_name + " ; "
     cursor.execute("SELECT id, compagnieVol FROM " + table_name + " LIMIT 0; ")
@@ -27,7 +31,10 @@ def voir_id_vols(conn, cursor):
 
 
 def voir_vol(conn,cursor):
-    
+    """
+    Permet de voir le contenu d'un vol sélectionné par son id.
+    """
+    # Affichage de la liste des vols pour en choisir un.
     voir_id_vols(conn, cursor)
 
     id_vol = input("Quel vol souhaitez-vous voir ? (id) : ")
@@ -37,13 +44,22 @@ def voir_vol(conn,cursor):
     while ligne:
         print(ligne)
         ligne = cursor.fetchone()
+
+
 def ajouter_passager(conn, cursor):
+    """
+    Permet d'ajouter un passager dans un vol.
+    Les entrées concernant les utilisateurs sont supposées valides.
+
+    Vérification du nombre de personnes déjà présentes dans le vol et comparaison
+    avec le nombre de places de l'avion. Ajout refusé si nombre de places max atteint.
+    """
+
+    # Affichage de la liste des vols pour en choisir un.
     print("\nLes vols existants sont : ")
     voir_id_vols(conn, cursor)
     print()
     vol_id = input("Entrez l'ID du vol : ")
-
-    #req1="SELECT SUM((p->'bagages'->>'poidsBagage')::numeric) AS poids_total_bagages FROM schema_json_psql.VolNR v, JSON_ARRAY_ELEMENTS(v.passager) p WHERE v.destination = 'Istanbul' OR v.provenance = 'Istanbul';"
 
     # --------------------------------Récupère le nombre de places max --------------------------
     cursor.execute("SELECT avion->'model'->>'nombrePlaces' from schema_json_psql.VolNR v where v.id = %s", (vol_id,))
@@ -68,8 +84,7 @@ def ajouter_passager(conn, cursor):
 
             print("Vous pouvez donc rajouter un passager.")
 
-
-
+            # Sélection des informations et conversion dans le type demandé.
             nom = input("Nom: ")
             prenom = input("Prénom: ")
             dateNaiss = input("Date de naissance (YYYY-MM-DD): ")
@@ -81,6 +96,7 @@ def ajouter_passager(conn, cursor):
             nombreBagage = int(input("Ajouter le nombre total de bagages : "))
             poidsBagage = float(input("Ajouter le poids total des bagages : "))
 
+            # Création de l'objet JSON
             nouveau_passager = {
                 "nom": nom,
                 "prenom": prenom,
@@ -106,19 +122,24 @@ def ajouter_passager(conn, cursor):
                 passagers_existants.append(nouveau_passager)
                 cursor.execute("UPDATE VolNR SET passager = %s WHERE id = %s;",
                               (json.dumps(passagers_existants), vol_id))
-            else:
-                # Le vol n'existe pas, le créer avec le premier passager
-                cursor.execute("INSERT INTO VolNR (vol_id, passager) VALUES (%s, %s);",
-                              (id, json.dumps([nouveau_passager])))
 
-            print("Passager ajouté avec succès.")
-            conn.commit()
+                print("Passager ajouté avec succès.")
+                conn.commit()
 
 
 def supprimer_passager(conn, cursor):
+    """
+    Suppresion d'un passager sur la base de son nom,prénom, numéro de téléphone.
+
+    Le nom et prénom de tous les passagers sont listés ainsi que le numéro de téléphone.
+    L'utilisateur en supprime un en sélectionnant sa position dans la liste (en partant de 1).
+    """
+    # Affichage de la liste des vols pour en choisir un.
     print("\nLes vols existants sont : ")
     voir_id_vols(conn, cursor)
     print()
+
+    # Récupération du vol
     vol_id = input("Entrez l'ID du vol pour voir les passagers : ")
     sql = "SELECT passager FROM VolNR WHERE id = %s"
     cursor.execute(sql, (vol_id,))
@@ -128,11 +149,13 @@ def supprimer_passager(conn, cursor):
         print(f"Aucun passager trouvé pour le vol {vol_id}.")
         return
 
+    # Affichage de tous les passagers de ce vol
     passagers = result[0]
     print("Passagers du vol :")
     for idx, passager in enumerate(passagers, 1):
-        print(f"{idx}. {passager['nom']} {passager['prenom']}")
+        print(f"{idx}. {passager['nom']} {passager['prenom']} {passager['numeroTel']}")
 
+    # Suppression basé sur l'index.
     passager_idx = int(input(f"Entrez l'index du passager à supprimer dans la liste (entre [1, {len(passagers)}]) :")) - 1
     if 0 <= passager_idx < len(passagers):
         passager_a_supprimer = passagers[passager_idx]
@@ -153,8 +176,10 @@ def supprimer_passager(conn, cursor):
         print("Numéro de passager invalide.")
 
 def view_requests(conn,cursor):
-    #conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
-    #cursor = conn.cursor()
+    """
+    Effectue les requêtes demandés et affiche le résultat.
+    """
+    # --------------- Requête 1 --------------
     req1="SELECT SUM((p->'bagages'->>'poidsBagage')::numeric) AS poids_total_bagages FROM schema_json_psql.VolNR v, JSON_ARRAY_ELEMENTS(v.passager) p WHERE v.destination = 'Istanbul' OR v.provenance = 'Istanbul';"
     cursor.execute(req1)
     result = cursor.fetchone()
@@ -165,33 +190,19 @@ def view_requests(conn,cursor):
     else:
         print("No baggage weight found for the specified conditions.")
 
-    """
-    req2="SELECT AVG((avion->>'model')::json->>'nombrePlaces')::numeric AS nombre_moyen_stewards FROM schema_json_psql.VolNR WHERE (avion->>'model')::json->>'nom' = 'A307';"
-    cursor.execute(req2)
-    print(cursor.fetchall())
-    """
 
+    # --------------- Requête 3 --------------
     req3="SELECT compagnieVol, SUM(json_array_length(passager::json)) AS total_passagers FROM schema_json_psql.VolNR WHERE type = 'VolDepart' GROUP BY compagnieVol ORDER BY total_passagers DESC LIMIT 10;"   
     cursor.execute(req3)
     print(f"Les compagnies sont : {cursor.fetchall()}")
 
-def view_requests0(conn,cursor):
-    queries = [
-         "SELECT SUM((passager->>'bagages')::json->>'poidsBagage')::numeric AS poids_total_bagages FROM schema_json_psql.VolNR WHERE destination = 'Istanbul' OR provenance = 'Istanbul';",
-        "SELECT AVG((avion->>'model')::json->>'nombrePlaces')::numeric AS nombre_moyen_stewards FROM schema_json_psql.VolNR WHERE (avion->>'model')::json->>'nom' = 'A307';.id = STEWARTTRAVAIL.vol RIGHT OUTER JOIN Avion ON Avion.id = vol.avion JOIN Model ON Model.nom = Avion.model WHERE Model.nom = 'A307' GROUP BY Avion.id;",
-        "SELECT compagnieVol, SUM(json_array_length(passagerjson)) AS total_passagers FROM schema_json_psql.VolNR WHERE type = 'VolDepart' GROUP BY compagnieVol ORDER BY total_passagers DESC LIMIT 10;"
-    ]
-    for query in queries:
-        cursor.execute(query)
-        results = cursor.fetchall()
-        print("Résultats de la requête :")
-        for result in results:
-            print(result)
-
 def main():
+    # Connection
     conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s" % (HOST, DATABASE, USER, PASSWORD))
     cur = conn.cursor()
     init(cur)
+
+    # Menu principal
     while True:
         print("\nMenu Principal")
         print("1. Voir les tables")
@@ -215,8 +226,11 @@ def main():
         else:
 
             print("Choix invalide, veuillez réessayer.")
+
+    # Fermeture de la connection
     cur.close()
     conn.close()
+
 
 if __name__ == "__main__":
     main()
