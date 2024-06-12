@@ -42,49 +42,77 @@ def ajouter_passager(conn, cursor):
     voir_id_vols(conn, cursor)
     print()
     vol_id = input("Entrez l'ID du vol : ")
-    nom = input("Nom: ")
-    prenom = input("Prénom: ")
-    dateNaiss = input("Date de naissance (YYYY-MM-DD): ")
-    rue = input("Rue: ")
-    codepostal = input("Code postal: ")
-    ville = input("Ville: ")
-    pays = input("Pays: ")
-    numeroTel = input("Numéro de téléphone: ")
-    nombreBagage = int(input("Ajouter le nombre total de bagages : "))
-    poidsBagage = float(input("Ajouter le poids total des bagages : "))
 
-    nouveau_passager = {
-        "nom": nom,
-        "prenom": prenom,
-        "dateNaiss": dateNaiss,
-        "rue": rue,
-        "codepostal": codepostal,
-        "ville": ville,
-        "pays": pays,
-        "numeroTel": numeroTel,
-        "bagages": {
-            "nombreBagage" : nombreBagage,
-            "poidsBagage" : poidsBagage,
-        }
-    }
+    #req1="SELECT SUM((p->'bagages'->>'poidsBagage')::numeric) AS poids_total_bagages FROM schema_json_psql.VolNR v, JSON_ARRAY_ELEMENTS(v.passager) p WHERE v.destination = 'Istanbul' OR v.provenance = 'Istanbul';"
 
-    # Vérifier si le vol existe déjà
-    cursor.execute("SELECT VolNR.passager FROM VolNR WHERE id = %s;", (vol_id,))
+    # --------------------------------Récupère le nombre de places max --------------------------
+    cursor.execute("SELECT avion->'model'->>'nombrePlaces' from schema_json_psql.VolNR v where v.id = %s", (vol_id,))
     result = cursor.fetchone()
+    if not result:
+        print("Pas de vol avec cet id!")
 
-    if result:
-        # Le vol existe, ajouter le passager à la liste
-        passagers_existants = result[0]
-        passagers_existants.append(nouveau_passager)
-        cursor.execute("UPDATE VolNR SET passager = %s WHERE id = %s;",
-                      (json.dumps(passagers_existants), vol_id))
     else:
-        # Le vol n'existe pas, le créer avec le premier passager
-        cursor.execute("INSERT INTO VolNR (vol_id, passager) VALUES (%s, %s);",
-                      (id, json.dumps([nouveau_passager])))
 
-    print("Passager ajouté avec succès.")
-    conn.commit()
+        nbPlacesMax = int(result[0])
+
+        # ------------------------------ Compter le nombre de passager ----------------------
+        cursor.execute("SELECT SUM(json_array_length(passager::json))::numeric as nb_passagers_actuel FROM schema_json_psql.VolNR WHERE id = %s", (vol_id,)) 
+        result = cursor.fetchone()
+        nb_passagers_actuel = int(result[0])
+        print(f"Il y a actuellement {nb_passagers_actuel} passagers actuel dans le vol.", end=" ")
+        print(f"Le nombre de places maximal est {nbPlacesMax}.")
+
+        if nbPlacesMax <= nb_passagers_actuel:
+            print("Vous ne pouvez donc pas rajouter de passager.")
+        else:
+
+            print("Vous pouvez donc rajouter un passager.")
+
+
+
+            nom = input("Nom: ")
+            prenom = input("Prénom: ")
+            dateNaiss = input("Date de naissance (YYYY-MM-DD): ")
+            rue = input("Rue: ")
+            codepostal = input("Code postal: ")
+            ville = input("Ville: ")
+            pays = input("Pays: ")
+            numeroTel = input("Numéro de téléphone: ")
+            nombreBagage = int(input("Ajouter le nombre total de bagages : "))
+            poidsBagage = float(input("Ajouter le poids total des bagages : "))
+
+            nouveau_passager = {
+                "nom": nom,
+                "prenom": prenom,
+                "dateNaiss": dateNaiss,
+                "rue": rue,
+                "codepostal": codepostal,
+                "ville": ville,
+                "pays": pays,
+                "numeroTel": numeroTel,
+                "bagages": {
+                    "nombreBagage" : nombreBagage,
+                    "poidsBagage" : poidsBagage,
+                }
+            }
+
+            # Vérifier si le vol existe déjà
+            cursor.execute("SELECT VolNR.passager FROM VolNR WHERE id = %s;", (vol_id,))
+            result = cursor.fetchone()
+
+            if result:
+                # Le vol existe, ajouter le passager à la liste
+                passagers_existants = result[0]
+                passagers_existants.append(nouveau_passager)
+                cursor.execute("UPDATE VolNR SET passager = %s WHERE id = %s;",
+                              (json.dumps(passagers_existants), vol_id))
+            else:
+                # Le vol n'existe pas, le créer avec le premier passager
+                cursor.execute("INSERT INTO VolNR (vol_id, passager) VALUES (%s, %s);",
+                              (id, json.dumps([nouveau_passager])))
+
+            print("Passager ajouté avec succès.")
+            conn.commit()
 
 
 def supprimer_passager(conn, cursor):
