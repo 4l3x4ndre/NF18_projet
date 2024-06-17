@@ -3,11 +3,16 @@ import psycopg2
 import json
 
 # Configuration de la connexion à la base de données
-
+"""
 USER = "nf18p013"
 HOST = "tuxa.sme.utc"
 PASSWORD = "hIcD85qXLDBu"
 DATABASE = "dbnf18p013"
+"""
+USER="me"
+PASSWORD="secret"
+HOST="localhost"
+DATABASE="mydb"
 
 
 
@@ -21,10 +26,15 @@ def voir_id_vols(conn, cursor):
     table_name = "VolNR"
     sql = "SELECT id, compagnieVol FROM " + table_name + " ; "
     cursor.execute("SELECT id, compagnieVol FROM " + table_name + " LIMIT 0; ")
+
+    # Mise en forme pour la ligne des noms des attributs
     column = []
     for DESC in cursor.description:
         column.append(DESC[0])
-    print(column)
+    print("\n  " + "      |    ".join(column))
+    print("------------------------")
+
+
     cursor.execute(sql)
     ligne = cursor.fetchone()
     while ligne :
@@ -200,7 +210,7 @@ def view_requests(conn,cursor):
     Effectue les requêtes demandés et affiche le résultat.
     """
     # --------------- Requête 1 --------------
-    req1="SELECT SUM((p->'bagages'->>'poidsBagage')::numeric) AS poids_total_bagages FROM schema_json_psql.VolNR v, JSON_ARRAY_ELEMENTS(v.passager) p WHERE v.destination = 'Istanbul' OR v.provenance = 'Istanbul';"
+    req1="SELECT SUM(COALESCE(((p->'bagages'->>'poidsBagage')::numeric), 0)) AS poids_total_bagages FROM schema_json_psql.VolNR v, JSON_ARRAY_ELEMENTS(v.passager) p WHERE v.destination = 'Istanbul' OR v.provenance = 'Istanbul';"
     cursor.execute(req1)
     result = cursor.fetchone()
 
@@ -214,7 +224,7 @@ def view_requests(conn,cursor):
 
     # --------------- Requête 3 --------------
     print("\n------Requête 3 -------" )
-    req3="SELECT compagnieVol, SUM(json_array_length(passager::json)) AS total_passagers FROM schema_json_psql.VolNR WHERE type = 'VolDepart' GROUP BY compagnieVol ORDER BY total_passagers DESC LIMIT 10;"   
+    req3="SELECT compagnieVol, SUM(COALESCE(json_array_length(passager::json), 0)) AS total_passagers FROM schema_json_psql.VolNR WHERE type = 'VolDepart' GROUP BY compagnieVol ORDER BY total_passagers DESC LIMIT 10;"   
     cursor.execute(req3)
     print(f"Les compagnies sont : {cursor.fetchall()}")
 
