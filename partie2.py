@@ -3,10 +3,12 @@ import psycopg2
 import json
 
 # Configuration de la connexion à la base de données
+
 USER = "nf18p013"
 HOST = "tuxa.sme.utc"
 PASSWORD = "hIcD85qXLDBu"
 DATABASE = "dbnf18p013"
+
 
 
 def init(cur):
@@ -41,6 +43,8 @@ def voir_vol(conn,cursor):
     sql = "SELECT * FROM VolNR WHERE id = %s"
     cursor.execute(sql, (id_vol,))
     ligne = cursor.fetchone()
+    if not ligne:
+        print("N'est pas un id valide.")
     while ligne:
         print(ligne)
         ligne = cursor.fetchone()
@@ -88,13 +92,26 @@ def ajouter_passager(conn, cursor):
             nom = input("Nom: ")
             prenom = input("Prénom: ")
             dateNaiss = input("Date de naissance (YYYY-MM-DD): ")
+            try:
+                _date = datetime.datetime.strptime(dateNaiss, "%Y-%m-%d")
+            except:
+                print("Format de date invalide. Veuillez bien lire la demande")
+                return
             rue = input("Rue: ")
             codepostal = input("Code postal: ")
             ville = input("Ville: ")
             pays = input("Pays: ")
             numeroTel = input("Numéro de téléphone: ")
-            nombreBagage = int(input("Ajouter le nombre total de bagages : "))
-            poidsBagage = float(input("Ajouter le poids total des bagages : "))
+            try:
+                nombreBagage = int(input("Ajouter le nombre total de bagages : "))
+            except:
+                print("Veuillez entrer un entier!")
+                return
+            try:
+                poidsBagage = float(input("Ajouter le poids total des bagages : "))
+            except:
+                print("Veuillez entrer en entier/float!")
+                return
 
             # Création de l'objet JSON
             nouveau_passager = {
@@ -145,7 +162,10 @@ def supprimer_passager(conn, cursor):
     cursor.execute(sql, (vol_id,))
     result = cursor.fetchone()
 
-    if not result or not result[0]:
+    if not result:
+        print("Pas de vol avec cet id!")
+        return
+    elif not result[0]:
         print(f"Aucun passager trouvé pour le vol {vol_id}.")
         return
 
@@ -183,15 +203,17 @@ def view_requests(conn,cursor):
     req1="SELECT SUM((p->'bagages'->>'poidsBagage')::numeric) AS poids_total_bagages FROM schema_json_psql.VolNR v, JSON_ARRAY_ELEMENTS(v.passager) p WHERE v.destination = 'Istanbul' OR v.provenance = 'Istanbul';"
     cursor.execute(req1)
     result = cursor.fetchone()
-    
+
+    print("------ Requête 1 ------")
     if result and result[0] is not None:
         poids_total_bagages = result[0]
         print(f"Poids total : {poids_total_bagages}")
     else:
-        print("No baggage weight found for the specified conditions.")
+        print("Pas de bagages pour les conditions demandés.")
 
 
     # --------------- Requête 3 --------------
+    print("\n------Requête 3 -------" )
     req3="SELECT compagnieVol, SUM(json_array_length(passager::json)) AS total_passagers FROM schema_json_psql.VolNR WHERE type = 'VolDepart' GROUP BY compagnieVol ORDER BY total_passagers DESC LIMIT 10;"   
     cursor.execute(req3)
     print(f"Les compagnies sont : {cursor.fetchall()}")
